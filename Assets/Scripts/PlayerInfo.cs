@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerInfo : MonoBehaviour {
+public class PlayerInfo {
     public const string NAME = "name";
 
 
-    public string name;
+    public string name { private set; get; }
 
     public bool SetValue(string setting, string value) {
         switch (setting) {
