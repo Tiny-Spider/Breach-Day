@@ -4,11 +4,17 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(NetworkView))]
 public class NetworkManager : MonoBehaviour {
+    public static NetworkManager instance;
+
     public PlayerInfo myPlayerInfo = new PlayerInfo();
     public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
 
     public string menuScene;
     public string lobbyScene;
+
+    void Awake() {
+        instance = this;
+    }
 
     #region On Connected
 
