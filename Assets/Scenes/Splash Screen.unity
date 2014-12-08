@@ -84,8 +84,11 @@ GameObject:
   - 4: {fileID: 100285501}
   - 114: {fileID: 100285502}
   - 114: {fileID: 100285500}
+  - 114: {fileID: 100285504}
+  - 114: {fileID: 100285503}
+  - 148: {fileID: 100285505}
   m_Layer: 0
-  m_Name: Manager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +114,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 100285499}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 375.978607, y: 389.597229, z: -67.7823181}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -127,6 +130,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae696f68acff1544853b217a612942a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &100285503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 100285499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca31edd367383c34c9cf42a7b9844343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &100285504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 100285499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6efaa6177661c77498a6d82b4c472d2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuScene: Menu
+  lobbyScene: Lobby
+--- !u!148 &100285505
+NetworkView:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 100285499}
+  m_Enabled: 1
+  m_StateSynchronization: 0
+  m_Observed: {fileID: 0}
+  m_ViewID:
+    m_ID: 1
+    m_Type: 1
 --- !u!1 &673068061
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,10 +195,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: Menu
   title: {fileID: 1764550805}
-  titleTime: 2
+  titleTime: 0
   subtitle: {fileID: 1207332272}
-  subtitleTime: 1
-  splashTime: 1
+  subtitleTime: 0
+  splashTime: 0
 --- !u!4 &673068063
 Transform:
   m_ObjectHideFlags: 0
