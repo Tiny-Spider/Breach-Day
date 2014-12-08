@@ -32,6 +32,7 @@ public class MenuManager : MonoBehaviour {
     {
         InitializePanels();
         InitializeSliders();
+        StartCoroutine(DelayTextUpdate());
     }
 
     #region GUIInterractions
@@ -87,7 +88,61 @@ public class MenuManager : MonoBehaviour {
         serverFeedback.color = color;
     }
 
-    public void TryConnectToServer(){
+    IEnumerator DelayTextUpdate() {
+        yield return new WaitForEndOfFrame();
+        LoadTextData();
+    }
+
+
+    #endregion
+
+    #region SoundControl
+    void InitializeSliders() {
+        SetSoundVolume(SoundManager.instance.soundVolume);
+        SetMusicVolume(SoundManager.instance.musicVolume);
+        musicSlider.value = SoundManager.instance.musicVolume;
+        soundSlider.value = SoundManager.instance.soundVolume;
+    }
+
+    public void SetSoundVolume(float volume) {
+        SoundManager.instance.soundVolume = volume;
+        soundSliderText.text = ((int)(volume * 100)).ToString();
+    }
+
+    public void SetMusicVolume(float volume) {
+        SoundManager.instance.musicVolume = volume;
+        musicSliderText.text = ((int)(volume * 100)).ToString();
+    }
+    #endregion
+
+    #region SaveMenuData
+
+    public void SaveTextData() {
+        foreach (SaveData loadData in this.loadData)
+        {
+            PlayerPrefs.SetString(loadData.saveTag, loadData.text.text);
+            print(PlayerPrefs.GetString(loadData.saveTag));
+        }
+    }
+
+    public void LoadTextData() {
+        foreach (SaveData loadData in this.loadData)
+        {
+            string temp = PlayerPrefs.GetString(loadData.saveTag, "");
+            loadData.text.text = temp;
+            if (temp != "")
+            {
+                loadData.placeHolder.enabled = false;
+                
+            }
+           
+        }
+    }
+
+    #endregion
+
+    #region Server
+    public void TryConnectToServer() {
         int port;
         if (int.TryParse(clientNetworkPort.text, out port))
         {
@@ -104,7 +159,7 @@ public class MenuManager : MonoBehaviour {
                     break;
                 case NetworkConnectionError.ConnectionBanned:
                     Debug.LogError("Banned from server");
-                    ServerConnectionFeedback("Banned from server",Color.red);
+                    ServerConnectionFeedback("Banned from server", Color.red);
                     break;
                 case NetworkConnectionError.InvalidPassword:
                     Debug.LogError("Incorrect password");
@@ -136,63 +191,12 @@ public class MenuManager : MonoBehaviour {
         }
     }
     #endregion
-
-    #region SoundControl
-    void InitializeSliders() {
-        SetSoundVolume(SoundManager.instance.soundVolume);
-        SetMusicVolume(SoundManager.instance.musicVolume);
-        musicSlider.value = SoundManager.instance.musicVolume;
-        soundSlider.value = SoundManager.instance.soundVolume;
-    }
-
-    public void SetSoundVolume(float volume) {
-        SoundManager.instance.soundVolume = volume;
-        soundSliderText.text = ((int)(volume * 100)).ToString();
-    }
-
-    public void SetMusicVolume(float volume) {
-        SoundManager.instance.musicVolume = volume;
-        musicSliderText.text = ((int)(volume * 100)).ToString();
-    }
-    #endregion
-
-    #region SaveMenuData
-
-    public void SaveJoinIP(string ip) {
-        PlayerPrefs.SetString("clientIP", ip);
-    }
-    public void SaveCreateIP(string ip) {
-        PlayerPrefs.SetString("serverIP", ip);
-    }
-
-    public void SaveJoinPort(string port) {
-        PlayerPrefs.SetString("clientPort", port);
-    }
-
-    public void SaveCreatePort(string port) {
-        PlayerPrefs.SetString("serverPort", port);
-    }
-
-    public void SaveTextData() {
-        foreach (SaveData loadData in this.loadData)
-        {
-            loadData.text.text = PlayerPrefs.GetString(loadData.saveTag, "");
-        }
-    }
-
-    public void LoadTextData() {
-        foreach (SaveData data in loadData)
-        {
-            data.text.text = PlayerPrefs.GetString(tag);
-        }
-    }
-
-    #endregion
 }
 [System.Serializable]
 public struct SaveData{
     public string saveTag;
     public Text text;
+    public Text placeHolder;
 
 
 }
