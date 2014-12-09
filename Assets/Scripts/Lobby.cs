@@ -12,4 +12,8 @@ public class Lobby : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    void OnConnected() {
+
+    }
 }

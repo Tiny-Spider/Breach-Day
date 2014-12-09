@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour {
     public GameObject mainPanel;
+    public GameObject createServerEditSettingsPanel;
     public AudioClip buttonClick;
 
     public Slider soundSlider;
@@ -88,6 +89,19 @@ public class MenuManager : MonoBehaviour {
         serverFeedback.color = color;
     }
 
+    public void OpenServerEditSettingsPanel(GameObject editSetting) {
+        createServerEditSettingsPanel.SetActive(true);
+    }
+
+    public void CloseServerEditSettingsPanel() {
+        foreach (Transform go in transform)
+        {
+            if(go.gameObject.activeInHierarchy)
+            go.gameObject.SetActive(false);
+        }
+        createServerEditSettingsPanel.SetActive(false);
+    }
+
     IEnumerator DelayTextUpdate() {
         yield return new WaitForEndOfFrame();
         LoadTextData();
@@ -150,8 +164,6 @@ public class MenuManager : MonoBehaviour {
 
             switch (error)
             {
-                case NetworkConnectionError.NoError:
-                    break;
                 case NetworkConnectionError.AlreadyConnectedToServer:
                 case NetworkConnectionError.AlreadyConnectedToAnotherServer:
                     Network.Disconnect();
@@ -187,9 +199,12 @@ public class MenuManager : MonoBehaviour {
                     Debug.LogError("Failed to connect");
                     ServerConnectionFeedback("Failed to connect");
                     break;
+                default: break;
             }
         }
     }
+
+
     #endregion
 }
 [System.Serializable]
