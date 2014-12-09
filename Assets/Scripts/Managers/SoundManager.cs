@@ -14,12 +14,11 @@ public class SoundManager : MonoBehaviour {
 
     void Start() {
         InitializeVolume();
-        //QualitySettings.ani
     }
 
     void InitializeVolume() {
-        soundVolume = PlayerPrefs.GetFloat("soundVolume",1);
-        musicVolume = PlayerPrefs.GetFloat("musicVolume",1);
+        soundVolume = PlayerPrefs.GetFloat("soundVolume", 1);
+        musicVolume = PlayerPrefs.GetFloat("musicVolume", 1);
     }
 
     public void SaveSettings() {
