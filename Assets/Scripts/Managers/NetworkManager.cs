@@ -6,6 +6,12 @@ using System.Collections.Generic;
 public class NetworkManager : MonoBehaviour {
     public static NetworkManager instance;
 
+    public delegate void OnPlayerJoined(NetworkPlayer player);
+    public event OnPlayerJoined OnJoin = delegate { };
+
+    public delegate void OnPlayerDisconnect(NetworkPlayer player);
+    public event OnPlayerDisconnect OnDisconnect = delegate { };
+
     public PlayerInfo myPlayerInfo = new PlayerInfo();
     public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
 
@@ -21,10 +27,12 @@ public class NetworkManager : MonoBehaviour {
     // Whenever you connect, server or client we should load the lobby.
     void OnConnectedToServer() {
         Application.LoadLevel(lobbyScene);
+        myPlayerInfo.SyncData();
     }
 
     void OnServerInitialized() {
         Application.LoadLevel(lobbyScene);
+        myPlayerInfo.SyncData();
     }
 
     #endregion
@@ -61,19 +69,30 @@ public class NetworkManager : MonoBehaviour {
     public void ChangePlayer(NetworkPlayer player, bool add) {
         if (add) {
             connectedPlayers.Add(player, new PlayerInfo());
+            OnJoin(player);
         } else {
-            connectedPlayers.Remove(player);
             Network.RemoveRPCs(player);
             Network.DestroyPlayerObjects(player);
+            OnDisconnect(player);
+            connectedPlayers.Remove(player);
         }
+    }
+
+    public void UpdatePlayer(string setting, string value) {
+        UpdatePlayer(Network.player, setting, value);
     }
 
     [RPC]
     public void UpdatePlayer(NetworkPlayer player, string setting, string value) {
-        PlayerInfo playerInfo = connectedPlayers[player];
+        if (networkView.isMine) {
+            networkView.RPC("UpdatePlayer", RPCMode.OthersBuffered, player, setting, value);
+        }
+        else {
+            PlayerInfo playerInfo = connectedPlayers[player];
 
-        if (playerInfo != null) {
-            playerInfo.SetValue(setting, value);
+            if (playerInfo != null) {
+                playerInfo.SetValue(setting, value);
+            }
         }
     }
 }
