@@ -12,7 +12,6 @@ public class NetworkManager : MonoBehaviour {
     public delegate void OnPlayerDisconnect(NetworkPlayer player);
     public event OnPlayerDisconnect OnDisconnect = delegate { };
 
-    public PlayerInfo myPlayerInfo = new PlayerInfo();
     public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
 
     public string menuScene;
@@ -22,23 +21,26 @@ public class NetworkManager : MonoBehaviour {
         instance = this;
     }
 
-    #region On Connected
+    #region Connecting
 
     // Whenever you connect, server or client we should load the lobby.
     void OnConnectedToServer() {
-        Application.LoadLevel(lobbyScene);
-        myPlayerInfo.SyncData();
+        OnConnect();
     }
 
     void OnServerInitialized() {
+        OnConnect();
+    }
+
+    void OnConnect() {
         Application.LoadLevel(lobbyScene);
-        myPlayerInfo.SyncData();
+        UpdatePlayer(PlayerInfo.NAME, GameManager.instance.name);
     }
 
     #endregion
 
 
-    #region On Disconnect/Quit/Stop
+    #region Disconnecting
 
     // Works for client and server, whenever you disconnect we should clear connected players
     // and close all connections to prevent dead connections, and load the menu
@@ -55,29 +57,32 @@ public class NetworkManager : MonoBehaviour {
 
     // Only called on a server, send RPC's to change the player amount on all clients
     void OnPlayerConnected(NetworkPlayer player) {
-        networkView.RPC("ChangePlayer", RPCMode.AllBuffered, player, true);
+        networkView.RPC("AddPlayer", RPCMode.AllBuffered, player);
     }
 
     void OnPlayerDisconnected(NetworkPlayer player) {
-        networkView.RPC("ChangePlayer", RPCMode.AllBuffered, player, false);
+        networkView.RPC("RemovePlayer", RPCMode.AllBuffered, player);
     }
 
     #endregion
 
 
     [RPC]
-    public void ChangePlayer(NetworkPlayer player, bool add) {
-        if (add) {
-            connectedPlayers.Add(player, new PlayerInfo());
-            OnJoin(player);
-        } else {
-            Network.RemoveRPCs(player);
-            Network.DestroyPlayerObjects(player);
-            OnDisconnect(player);
-            connectedPlayers.Remove(player);
-        }
+    public void AddPlayer(NetworkPlayer player) {
+        connectedPlayers.Add(player, new PlayerInfo());
+        OnJoin(player);
     }
 
+    [RPC]
+    public void RemovePlayer(NetworkPlayer player) {
+        Network.RemoveRPCs(player);
+        Network.DestroyPlayerObjects(player);
+
+        OnDisconnect(player);
+        connectedPlayers.Remove(player);
+    }
+
+    [RPC]
     public void UpdatePlayer(string setting, string value) {
         UpdatePlayer(Network.player, setting, value);
     }
@@ -94,5 +99,15 @@ public class NetworkManager : MonoBehaviour {
                 playerInfo.SetValue(setting, value);
             }
         }
+    }
+
+    [RPC]
+    public void StartGame() {
+        networkView.RPC("_StartGame", RPCMode.AllBuffered);
+    }
+
+    [RPC]
+    public void _StartGame() {
+        Application.LoadLevel("Map 1");
     }
 }

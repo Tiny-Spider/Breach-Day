@@ -18,10 +18,4 @@ public class PlayerInfo {
                 return false;
         }
     }
-
-    public void SyncData() {
-        NetworkManager networkManager = NetworkManager.instance;
-        
-        networkManager.UpdatePlayer(NAME, name);
-    }
 }
