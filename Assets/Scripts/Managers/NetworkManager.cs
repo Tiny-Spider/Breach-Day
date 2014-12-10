@@ -100,4 +100,14 @@ public class NetworkManager : MonoBehaviour {
             }
         }
     }
+
+    [RPC]
+    public void StartGame() {
+        networkView.RPC("_StartGame", RPCMode.AllBuffered);
+    }
+
+    [RPC]
+    public void _StartGame() {
+        Application.LoadLevel("Map 1");
+    }
 }
