@@ -13,13 +13,18 @@ public class MenuManager : MonoBehaviour {
     public Text soundSliderText;
     public Text musicSliderText;
 
-    public Text clientNetworkIP;
-    public Text clientNetworkPort;
-    public Text clientNetworkPassword;
+    public InputField directConnectIP;
+    public InputField directConnectPort;
+    public InputField directConnectPassword;
 
-    public Text serverNetworkIP;
-    public Text serverNetworkPort;
-    public Text serverNetworkPassword;
+
+
+    public InputField serverName;
+    public InputField serverDescription;
+    public InputField serverMaxPlayers;
+    public InputField serverPort;
+    public InputField serverPassword;
+    public Toggle serverUseNAT;
 
     public Text serverFeedback;
 
@@ -107,6 +112,52 @@ public class MenuManager : MonoBehaviour {
         LoadTextData();
     }
 
+    public void StartServer() {
+       NetworkConnectionError error = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
+       Network.incomingPassword = serverPassword.text;
+       MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text,serverDescription.text);
+
+       switch (error)
+       {
+           case NetworkConnectionError.AlreadyConnectedToServer:
+           case NetworkConnectionError.AlreadyConnectedToAnotherServer:
+               Network.Disconnect();
+               StartServer();
+               break;
+           case NetworkConnectionError.ConnectionBanned:
+               Debug.LogError("Banned from server");
+               ServerConnectionFeedback("Banned from server", Color.red);
+               break;
+           case NetworkConnectionError.InvalidPassword:
+               Debug.LogError("Incorrect password");
+               ServerConnectionFeedback("Incorrect password", Color.red);
+               break;
+           case NetworkConnectionError.TooManyConnectedPlayers:
+               Debug.LogError("Server is full");
+               ServerConnectionFeedback("Server is full");
+               break;
+           case NetworkConnectionError.EmptyConnectTarget:
+               Debug.LogError("No target server entered");
+               ServerConnectionFeedback("Please enter target server");
+               break;
+           case NetworkConnectionError.NATPunchthroughFailed:
+           case NetworkConnectionError.NATTargetConnectionLost:
+           case NetworkConnectionError.NATTargetNotConnected:
+           case NetworkConnectionError.InternalDirectConnectFailed:
+               Debug.LogError("NAT error");
+               ServerConnectionFeedback("Nat error");
+               break;
+           case NetworkConnectionError.RSAPublicKeyMismatch:
+           case NetworkConnectionError.ConnectionFailed:
+           case NetworkConnectionError.CreateSocketOrThreadFailure:
+           case NetworkConnectionError.IncorrectParameters:
+               Debug.LogError("Failed to connect");
+               ServerConnectionFeedback("Failed to connect");
+               break;
+           default: break;
+       }
+
+    }
 
     #endregion
 
@@ -158,9 +209,9 @@ public class MenuManager : MonoBehaviour {
     #region Server
     public void TryConnectToServer() {
         int port;
-        if (int.TryParse(clientNetworkPort.text, out port))
+        if (int.TryParse(directConnectPort.text, out port))
         {
-            NetworkConnectionError error = Network.Connect(clientNetworkIP.text, port, serverNetworkPassword.text);
+            NetworkConnectionError error = Network.Connect(directConnectIP.text, port, serverPassword.text);
 
             switch (error)
             {
