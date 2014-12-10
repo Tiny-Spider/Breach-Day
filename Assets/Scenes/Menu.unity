@@ -4410,6 +4410,7 @@ GameObject:
   - 114: {fileID: 720311716}
   - 114: {fileID: 720311715}
   - 222: {fileID: 720311714}
+  - 114: {fileID: 720311713}
   m_Layer: 5
   m_Name: MainMenu - Canvas
   m_TagString: Untagged
@@ -4417,6 +4418,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &720311713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 720311712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
 --- !u!222 &720311714
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4441,18 +4463,15 @@ MonoBehaviour:
   musicSlider: {fileID: 211092363}
   soundSliderText: {fileID: 1106983891}
   musicSliderText: {fileID: 2123559276}
-  clientNetworkIP: {fileID: 1179862228}
-  clientNetworkPort: {fileID: 988060430}
-  clientNetworkPassword: {fileID: 1575691568}
-  serverNetworkIP: {fileID: 0}
-  serverNetworkPort: {fileID: 0}
-  serverNetworkPassword: {fileID: 0}
+  directConnectIP: {fileID: 0}
+  directConnectPort: {fileID: 0}
+  directConnectPassword: {fileID: 0}
   serverName: {fileID: 1809162290}
-  description: {fileID: 477537741}
-  maxPlayers: {fileID: 1920843624}
-  port: {fileID: 552422973}
-  password: {fileID: 1078849055}
-  useNat: {fileID: 1672771887}
+  serverDescription: {fileID: 0}
+  serverMaxPlayers: {fileID: 0}
+  serverPort: {fileID: 0}
+  serverPassword: {fileID: 0}
+  serverUseNAT: {fileID: 0}
   serverFeedback: {fileID: 0}
   loadData:
   - saveTag: ClientIP
@@ -11185,7 +11204,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 799.660034, y: 100}
+  m_CellSize: {x: 994.660034, y: 100}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
