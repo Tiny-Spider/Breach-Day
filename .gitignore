@@ -2,7 +2,6 @@ Library/
 Temp/
 
 obj/
-*.sln
 *.unityproj
 *.csproj
 *.orig
