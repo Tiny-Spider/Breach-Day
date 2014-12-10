@@ -221,8 +221,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 937301693}
-  - 223: {fileID: 937301692}
   - 114: {fileID: 937301691}
+  - 223: {fileID: 937301692}
   - 114: {fileID: 937301690}
   m_Layer: 5
   m_Name: Canvas
