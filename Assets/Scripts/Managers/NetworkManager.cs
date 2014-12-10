@@ -34,7 +34,7 @@ public class NetworkManager : MonoBehaviour {
 
     void OnConnect() {
         Application.LoadLevel(lobbyScene);
-        UpdatePlayer(PlayerInfo.NAME, GameManager.instance.name);
+        //UpdatePlayer(PlayerInfo.NAME, GameManager.instance.name);
     }
 
     #endregion
@@ -83,22 +83,25 @@ public class NetworkManager : MonoBehaviour {
     }
 
     [RPC]
-    public void UpdatePlayer(string setting, string value) {
-        UpdatePlayer(Network.player, setting, value);
-    }
-
-    [RPC]
     public void UpdatePlayer(NetworkPlayer player, string setting, string value) {
-        if (networkView.isMine) {
+        if (networkView.isMine)
+        {
             networkView.RPC("UpdatePlayer", RPCMode.OthersBuffered, player, setting, value);
         }
-        else {
+        else
+        {
             PlayerInfo playerInfo = connectedPlayers[player];
 
-            if (playerInfo != null) {
+            if (playerInfo != null)
+            {
                 playerInfo.SetValue(setting, value);
             }
         }
+    }
+
+    [RPC]
+    public void UpdatePlayer(string setting, string value) {
+        UpdatePlayer(Network.player, setting, value);
     }
 
     [RPC]
