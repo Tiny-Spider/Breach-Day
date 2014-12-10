@@ -8986,6 +8986,7 @@ GameObject:
   - 114: {fileID: 792867335}
   - 114: {fileID: 792867333}
   - 114: {fileID: 792867334}
+  - 114: {fileID: 792867336}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9048,6 +9049,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomFOV: 40
   zoomSpeed: 9
+--- !u!114 &792867336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 792867331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dca2ca251e81584a8e3fb6968bb8cf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  force: 3
 --- !u!114 &792867337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19477,7 +19490,6 @@ GameObject:
   - 4: {fileID: 1727305446}
   - 33: {fileID: 1727305448}
   - 23: {fileID: 1727305447}
-  - 114: {fileID: 1727305449}
   m_Layer: 0
   m_Name: LowPolyPistol
   m_TagString: Untagged
@@ -19526,18 +19538,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1727305445}
   m_Mesh: {fileID: 4300008, guid: 8bbfd2fc25d02da48856c6eedd90b029, type: 3}
---- !u!114 &1727305449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1727305445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0dca2ca251e81584a8e3fb6968bb8cf6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force: 60
 --- !u!1 &1728049222
 GameObject:
   m_ObjectHideFlags: 0
