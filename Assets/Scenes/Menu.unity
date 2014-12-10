@@ -209,7 +209,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 42839824}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 720311715}
+        m_MethodName: TryConnectToServer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &42839824
@@ -2194,8 +2206,8 @@ RectTransform:
   m_RootOrder: 9
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -50, y: 113}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -85, y: 113}
+  m_SizeDelta: {x: 90, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &385024287
 MonoBehaviour:
@@ -2262,10 +2274,10 @@ RectTransform:
   - {fileID: 882750461}
   m_Father: {fileID: 2136010148}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 509.5, y: -50}
+  m_SizeDelta: {x: 836.660034, y: 100}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &390185214
 MonoBehaviour:
@@ -2993,7 +3005,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &531981009
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3335,6 +3347,10 @@ Prefab:
     - target: {fileID: 400000, guid: f81834b807040bb439ae4db99bbab18d, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: f81834b807040bb439ae4db99bbab18d, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f81834b807040bb439ae4db99bbab18d, type: 2}
@@ -4463,15 +4479,15 @@ MonoBehaviour:
   musicSlider: {fileID: 211092363}
   soundSliderText: {fileID: 1106983891}
   musicSliderText: {fileID: 2123559276}
-  directConnectIP: {fileID: 0}
-  directConnectPort: {fileID: 0}
-  directConnectPassword: {fileID: 0}
+  directConnectIP: {fileID: 153043951}
+  directConnectPort: {fileID: 1792815998}
+  directConnectPassword: {fileID: 1605262046}
   serverName: {fileID: 1809162290}
-  serverDescription: {fileID: 0}
-  serverMaxPlayers: {fileID: 0}
-  serverPort: {fileID: 0}
-  serverPassword: {fileID: 0}
-  serverUseNAT: {fileID: 0}
+  serverDescription: {fileID: 477537741}
+  serverMaxPlayers: {fileID: 1920843624}
+  serverPort: {fileID: 552422973}
+  serverPassword: {fileID: 1078849055}
+  serverUseNAT: {fileID: 1672771887}
   serverFeedback: {fileID: 0}
   loadData:
   - saveTag: ClientIP
@@ -5152,8 +5168,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -50, y: -57}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -85, y: -57}
+  m_SizeDelta: {x: 90, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &849619738
 MonoBehaviour:
@@ -5279,8 +5295,8 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -50, y: -101}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -85, y: -101}
+  m_SizeDelta: {x: 90, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &871914765
 MonoBehaviour:
@@ -6382,8 +6398,8 @@ RectTransform:
   m_RootOrder: 10
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -50, y: 59}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -85, y: 59}
+  m_SizeDelta: {x: 90, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1169485317
 MonoBehaviour:
@@ -8760,9 +8776,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Join
-
-'
+  m_Text: Create
 --- !u!222 &1615871504
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10894,8 +10908,8 @@ RectTransform:
   m_RootOrder: 6
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -50, y: 149}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -85, y: 149}
+  m_SizeDelta: {x: 90, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &2090723765
 MonoBehaviour:

@@ -212,7 +212,7 @@ public class MenuManager : MonoBehaviour {
         if (int.TryParse(directConnectPort.text, out port))
         {
             NetworkConnectionError error = Network.Connect(directConnectIP.text, port, serverPassword.text);
-
+            print(error);
             switch (error)
             {
                 case NetworkConnectionError.AlreadyConnectedToServer:
