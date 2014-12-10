@@ -130,6 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae696f68acff1544853b217a612942a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Player
+  uniqueGameType: breach_day
 --- !u!114 &100285503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,8 +221,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 937301693}
-  - 223: {fileID: 937301692}
   - 114: {fileID: 937301691}
+  - 223: {fileID: 937301692}
   - 114: {fileID: 937301690}
   m_Layer: 5
   m_Name: Canvas
