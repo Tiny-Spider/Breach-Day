@@ -4,6 +4,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
+    public Level[] levels;
     public string name = "Player";
 
     public Mode mode;
