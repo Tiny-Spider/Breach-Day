@@ -6,6 +6,9 @@ using System.Collections.Generic;
 public class NetworkManager : MonoBehaviour {
     public static NetworkManager instance;
 
+    public delegate void OnServerNotification(string message);
+    public event OnServerNotification OnNote = delegate { };
+
     public delegate void OnPlayerJoined(NetworkPlayer player);
     public event OnPlayerJoined OnJoin = delegate { };
 
@@ -34,7 +37,7 @@ public class NetworkManager : MonoBehaviour {
 
     void OnConnect() {
         Application.LoadLevel(lobbyScene);
-        //UpdatePlayer(PlayerInfo.NAME, GameManager.instance.name);
+        UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
     }
 
     #endregion
@@ -83,25 +86,60 @@ public class NetworkManager : MonoBehaviour {
     }
 
     [RPC]
-    public void UpdatePlayer(NetworkPlayer player, string setting, string value) {
-        if (networkView.isMine)
-        {
-            networkView.RPC("UpdatePlayer", RPCMode.OthersBuffered, player, setting, value);
-        }
-        else
-        {
+    public void UpdatePlayer(NetworkPlayer player, string setting, string value, NetworkMessageInfo info) {
+        Debug.Log("UpdatePlayer");
+
+        // Sender is server, server may always update
+        if (info.sender == Network.connections[0]) {
+            Debug.Log("Update from server");
+
+            // Update the profile of the person
             PlayerInfo playerInfo = connectedPlayers[player];
 
-            if (playerInfo != null)
-            {
+            if (playerInfo != null) {
                 playerInfo.SetValue(setting, value);
+            }
+
+        } else {
+            // Recived an update from client, do some checks before sending it to others
+            if (Network.isServer) {
+                Debug.Log("Update from client");
+
+                switch (setting) {
+                    case PlayerInfo.NAME:
+                        // Check for invalid name, for example swearing
+                        if (value.Contains("fuck")) {
+                            networkView.RPC("ServerNotification", player, "Invalid data send! This can be caused by outdated server/client, please update your game!");
+                            Network.CloseConnection(player, true);
+                            return;
+                        }
+
+                        // All is good, send the others information
+                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value);
+
+                        break;
+                    case PlayerInfo.TEAM:
+
+                        // All is good, send the others information
+                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value);
+
+                        break;
+                    default:
+                        networkView.RPC("ServerNotification", player, "Invalid data send! This can be caused by outdated server/client, please update your game!");
+                        Network.CloseConnection(player, true);
+                        break;
+                }
             }
         }
     }
 
+    public void UpdateMyInfo(string setting, string value) {
+        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, Network.player, setting, value);
+    }
+
     [RPC]
-    public void UpdatePlayer(string setting, string value) {
-        UpdatePlayer(Network.player, setting, value);
+    public void ServerNotification(string message) {
+        OnNote(message);
     }
 
     [RPC]
