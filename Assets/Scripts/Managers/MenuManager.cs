@@ -7,8 +7,6 @@ public class MenuManager : MonoBehaviour {
     public static MenuManager instance;
 
     public GameObject mainPanel;
-    public GameObject createServerEditSettingsPanel;
-    public AudioClip buttonClick;
 
     public Slider soundSlider;
     public Slider musicSlider;
@@ -96,79 +94,11 @@ public class MenuManager : MonoBehaviour {
         Application.Quit();
     }
 
-    void ServerConnectionFeedback(string message) {
-        serverFeedback.text = message;
-        serverFeedback.color = Color.black;
-    }
 
-    void ServerConnectionFeedback(string message, Color color) {
-        serverFeedback.text = message;
-        serverFeedback.color = color;
-    }
-
-    public void OpenServerEditSettingsPanel(GameObject editSetting) {
-        createServerEditSettingsPanel.SetActive(true);
-    }
-
-    public void CloseServerEditSettingsPanel() {
-        foreach (Transform go in transform)
-        {
-            if(go.gameObject.activeInHierarchy)
-            go.gameObject.SetActive(false);
-        }
-        createServerEditSettingsPanel.SetActive(false);
-    }
 
     IEnumerator DelayTextUpdate() {
         yield return new WaitForEndOfFrame();
         LoadTextData();
-    }
-
-    public void StartServer() {
-       NetworkConnectionError error = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
-       Network.incomingPassword = serverPassword.text;
-       MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text,serverDescription.text);
-
-       switch (error)
-       {
-           case NetworkConnectionError.AlreadyConnectedToServer:
-           case NetworkConnectionError.AlreadyConnectedToAnotherServer:
-               Network.Disconnect();
-               StartServer();
-               break;
-           case NetworkConnectionError.ConnectionBanned:
-               Debug.LogError("Banned from server");
-               ServerConnectionFeedback("Banned from server", Color.red);
-               break;
-           case NetworkConnectionError.InvalidPassword:
-               Debug.LogError("Incorrect password");
-               ServerConnectionFeedback("Incorrect password", Color.red);
-               break;
-           case NetworkConnectionError.TooManyConnectedPlayers:
-               Debug.LogError("Server is full");
-               ServerConnectionFeedback("Server is full");
-               break;
-           case NetworkConnectionError.EmptyConnectTarget:
-               Debug.LogError("No target server entered");
-               ServerConnectionFeedback("Please enter target server");
-               break;
-           case NetworkConnectionError.NATPunchthroughFailed:
-           case NetworkConnectionError.NATTargetConnectionLost:
-           case NetworkConnectionError.NATTargetNotConnected:
-           case NetworkConnectionError.InternalDirectConnectFailed:
-               Debug.LogError("NAT error");
-               ServerConnectionFeedback("Nat error");
-               break;
-           case NetworkConnectionError.RSAPublicKeyMismatch:
-           case NetworkConnectionError.ConnectionFailed:
-           case NetworkConnectionError.CreateSocketOrThreadFailure:
-           case NetworkConnectionError.IncorrectParameters:
-               Debug.LogError("Failed to connect");
-               ServerConnectionFeedback("Failed to connect");
-               break;
-           default: break;
-       }
-
     }
 
     #endregion
@@ -270,6 +200,61 @@ public class MenuManager : MonoBehaviour {
         }
     }
 
+    public void StartServer() {
+        NetworkConnectionError error = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
+        Network.incomingPassword = serverPassword.text;
+        MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text, serverDescription.text);
+
+        switch (error)
+        {
+            case NetworkConnectionError.AlreadyConnectedToServer:
+            case NetworkConnectionError.AlreadyConnectedToAnotherServer:
+                Network.Disconnect();
+                StartServer();
+                break;
+            case NetworkConnectionError.ConnectionBanned:
+                Debug.LogError("Banned from server");
+                ServerConnectionFeedback("Banned from server", Color.red);
+                break;
+            case NetworkConnectionError.InvalidPassword:
+                Debug.LogError("Incorrect password");
+                ServerConnectionFeedback("Incorrect password", Color.red);
+                break;
+            case NetworkConnectionError.TooManyConnectedPlayers:
+                Debug.LogError("Server is full");
+                ServerConnectionFeedback("Server is full");
+                break;
+            case NetworkConnectionError.EmptyConnectTarget:
+                Debug.LogError("No target server entered");
+                ServerConnectionFeedback("Please enter target server");
+                break;
+            case NetworkConnectionError.NATPunchthroughFailed:
+            case NetworkConnectionError.NATTargetConnectionLost:
+            case NetworkConnectionError.NATTargetNotConnected:
+            case NetworkConnectionError.InternalDirectConnectFailed:
+                Debug.LogError("NAT error");
+                ServerConnectionFeedback("Nat error");
+                break;
+            case NetworkConnectionError.RSAPublicKeyMismatch:
+            case NetworkConnectionError.ConnectionFailed:
+            case NetworkConnectionError.CreateSocketOrThreadFailure:
+            case NetworkConnectionError.IncorrectParameters:
+                Debug.LogError("Failed to connect");
+                ServerConnectionFeedback("Failed to connect");
+                break;
+            default: break;
+        }
+    }
+
+    void ServerConnectionFeedback(string message) {
+        serverFeedback.text = message;
+        serverFeedback.color = Color.black;
+    }
+
+    void ServerConnectionFeedback(string message, Color color) {
+        serverFeedback.text = message;
+        serverFeedback.color = color;
+    }
 
     #endregion
 }
