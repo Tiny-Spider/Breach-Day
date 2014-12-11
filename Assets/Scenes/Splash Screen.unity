@@ -87,6 +87,7 @@ GameObject:
   - 114: {fileID: 100285504}
   - 114: {fileID: 100285503}
   - 148: {fileID: 100285505}
+  - 114: {fileID: 100285506}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -132,6 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae696f68acff1544853b217a612942a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levels:
+  - {fileID: 0}
   name: Player
   uniqueGameType: breach_day
 --- !u!114 &100285503
@@ -173,6 +176,19 @@ NetworkView:
   m_ViewID:
     m_ID: 1
     m_Type: 1
+--- !u!114 &100285506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 100285499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e5b887a2403cf43a13f3cac8d11afc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levels:
+  - {fileID: 11400000, guid: 01e2e444d3c3dac4e95aafbc86ed961a, type: 2}
 --- !u!1 &673068061
 GameObject:
   m_ObjectHideFlags: 0

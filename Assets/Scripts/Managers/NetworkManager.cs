@@ -32,6 +32,7 @@ public class NetworkManager : MonoBehaviour {
     }
 
     void OnServerInitialized() {
+        networkView.RPC("AddPlayer", RPCMode.AllBuffered, Network.player);
         OnConnect();
     }
 
@@ -73,6 +74,7 @@ public class NetworkManager : MonoBehaviour {
     [RPC]
     public void AddPlayer(NetworkPlayer player) {
         connectedPlayers.Add(player, new PlayerInfo());
+        Debug.Log("Added new player! \"" + player.ToString() + "\"");
         OnJoin(player);
     }
 
@@ -85,12 +87,13 @@ public class NetworkManager : MonoBehaviour {
         connectedPlayers.Remove(player);
     }
 
+    // Can only be called over RPC due to networkmessageinfo parameter
     [RPC]
     public void UpdatePlayer(NetworkPlayer player, string setting, string value, NetworkMessageInfo info) {
         Debug.Log("UpdatePlayer");
 
         // Sender is server, server may always update
-        if (info.sender == Network.connections[0]) {
+        if ((Network.isServer && networkView.isMine) || info.sender == Network.connections[0]) {
             Debug.Log("Update from server");
 
             // Update the profile of the person
@@ -109,7 +112,18 @@ public class NetworkManager : MonoBehaviour {
                     case PlayerInfo.NAME:
                         // Check for invalid name, for example swearing
                         if (value.Contains("fuck")) {
-                            networkView.RPC("ServerNotification", player, "Invalid data send! This can be caused by outdated server/client, please update your game!");
+                            networkView.RPC("ServerNotification", player, "Your name is inappropiate, you have been kicked!");
+                            Network.CloseConnection(player, true);
+                            return;
+                        }
+
+                        HashSet<string> names = new HashSet<string>();
+                        foreach (PlayerInfo playerInfo in connectedPlayers.Values) {
+                            names.Add(playerInfo.name.ToLower());
+                        }
+
+                        if (names.Contains(value.ToLower())) {
+                            networkView.RPC("ServerNotification", player, "Your name is already used! Please connect using a different name.");
                             Network.CloseConnection(player, true);
                             return;
                         }
@@ -131,6 +145,13 @@ public class NetworkManager : MonoBehaviour {
                 }
             }
         }
+
+        string connected = " ";
+        foreach (PlayerInfo a in connectedPlayers.Values) {
+            connected += a.name + " ";
+        }
+
+        Debug.Log("Connected Players:" + connected);
     }
 
     public void UpdateMyInfo(string setting, string value) {
