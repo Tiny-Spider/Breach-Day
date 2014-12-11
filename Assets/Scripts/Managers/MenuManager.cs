@@ -7,11 +7,14 @@ public class MenuManager : MonoBehaviour {
     public static MenuManager instance;
 
     public GameObject mainPanel;
+    public GameObject enterNamePanel;
 
     public Slider soundSlider;
     public Slider musicSlider;
     public Text soundSliderText;
     public Text musicSliderText;
+
+    public Text nameText;
 
     public InputField directConnectIP;
     public InputField directConnectPort;
@@ -27,10 +30,12 @@ public class MenuManager : MonoBehaviour {
     public Toggle serverUseNAT;
 
     public Text serverFeedback;
+    public SaveData[] loadData;
+    public string nameSaveTag;
 
     private List<GameObject> panels = new List<GameObject>();
 
-    public SaveData[] loadData;
+    
 
 
     void Awake()
@@ -48,7 +53,7 @@ public class MenuManager : MonoBehaviour {
     {
         InitializePanels();
         InitializeSliders();
-        StartCoroutine(DelayTextUpdate());
+        NameCheck();
     }
 
     #region GUIInterractions
@@ -123,12 +128,37 @@ public class MenuManager : MonoBehaviour {
     #endregion
 
     #region SaveMenuData
+    void NameCheck() {
+        if (PlayerPrefs.HasKey(nameSaveTag))
+        {
+            GameManager.instance.name = PlayerPrefs.GetString(nameSaveTag);
+            nameText.text = GameManager.instance.name;
+            print(GameManager.instance.name);
+        }
+        else
+        {
+            enterNamePanel.SetActive(true);
+        }
+    }
+
+    public void SetName(GameObject inputField) {
+        InputField temp = inputField.gameObject.GetComponent<InputField>();
+        //TODO error handeling
+        if (temp.text.Length >= 3)
+        {
+            PlayerPrefs.SetString(nameSaveTag,temp.text);
+            GameManager.instance.name = temp.text;
+            nameText.text = temp.text;
+            temp.text = "";
+            ClosePopupPanel(enterNamePanel);
+        }
+    }
 
     public void SaveTextData() {
         foreach (SaveData loadData in this.loadData)
         {
             PlayerPrefs.SetString(loadData.saveTag, loadData.text.text);
-            print(PlayerPrefs.GetString(loadData.saveTag));
+           // print(PlayerPrefs.GetString(loadData.saveTag));
         }
     }
 
@@ -136,14 +166,10 @@ public class MenuManager : MonoBehaviour {
         foreach (SaveData loadData in this.loadData)
         {
             string temp = PlayerPrefs.GetString(loadData.saveTag, "");
-            print(temp);
             loadData.text.text = temp;
             if (temp != "")
             {
-                print("disable placeholder");
-                loadData.placeHolder.enabled = false;
                 loadData.text.text = temp;
-                
             }
            
         }
@@ -261,10 +287,8 @@ public class MenuManager : MonoBehaviour {
 [System.Serializable]
 public struct SaveData{
     public string saveTag;
-    public Text text;
-    public Text placeHolder;
-
-
+    public InputField text;
 }
+
 
 

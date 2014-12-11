@@ -5,7 +5,7 @@ public class TextData : MonoBehaviour {
 
 	// Use this for initialization
 	void OnEnable () {
-        MenuManager.instance.LoadTextData();
+      //  MenuManager.instance.LoadTextData();
 	}
 	
 	// Update is called once per frame
