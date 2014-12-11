@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour {
+    public static MenuManager instance;
+
     public GameObject mainPanel;
     public GameObject createServerEditSettingsPanel;
     public AudioClip buttonClick;
@@ -32,7 +34,17 @@ public class MenuManager : MonoBehaviour {
 
     public SaveData[] loadData;
 
-    
+
+    void Awake()
+    {
+        instance = this;
+    }
+
+    void Update(){
+        if(Input.GetKey(KeyCode.T)){
+            LoadTextData();
+        }
+    }
 
     void Start()
     {
@@ -194,10 +206,13 @@ public class MenuManager : MonoBehaviour {
         foreach (SaveData loadData in this.loadData)
         {
             string temp = PlayerPrefs.GetString(loadData.saveTag, "");
+            print(temp);
             loadData.text.text = temp;
             if (temp != "")
             {
+                print("disable placeholder");
                 loadData.placeHolder.enabled = false;
+                loadData.text.text = temp;
                 
             }
            
