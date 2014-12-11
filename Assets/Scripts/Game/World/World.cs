@@ -9,13 +9,12 @@ public class World : MonoBehaviour {
     public Dictionary<NetworkPlayer, Player> players = new Dictionary<NetworkPlayer, Player>();
 
     void Start() {
-        loadEnvironment();
-        spawnPlayer();
-    }
-
-    private void loadEnvironment() {
         WorldSettings worldSettings = GameManager.instance.worldSettings;
 
+        loadEnvironment(worldSettings);
+    }
+
+    private void loadEnvironment(WorldSettings worldSettings) {
         // Clamp just to make sure you don't go over max
         int doorAmount = Mathf.Clamp(worldSettings.doors, 0, doors.Count);
         int wallAmount = Mathf.Clamp(worldSettings.walls, 0, walls.Count);
@@ -30,9 +29,5 @@ public class World : MonoBehaviour {
         for (int i = 0; i < walls.Count; i++) {
             walls[i].SetActive(i < wallAmount);
         }
-    }
-
-    private void spawnPlayer() {
-
     }
 }

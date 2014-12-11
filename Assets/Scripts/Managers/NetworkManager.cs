@@ -24,6 +24,10 @@ public class NetworkManager : MonoBehaviour {
         instance = this;
     }
 
+    public PlayerInfo GetMyInfo() {
+        return connectedPlayers[Network.player];
+    }
+
     #region Connecting
 
     // Whenever you connect, server or client we should load the lobby.
