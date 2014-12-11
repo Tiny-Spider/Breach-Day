@@ -7,13 +7,14 @@ public class MenuManager : MonoBehaviour {
     public static MenuManager instance;
 
     public GameObject mainPanel;
-    public GameObject createServerEditSettingsPanel;
-    public AudioClip buttonClick;
+    public GameObject enterNamePanel;
 
     public Slider soundSlider;
     public Slider musicSlider;
     public Text soundSliderText;
     public Text musicSliderText;
+
+    public Text nameText;
 
     public InputField directConnectIP;
     public InputField directConnectPort;
@@ -29,10 +30,12 @@ public class MenuManager : MonoBehaviour {
     public Toggle serverUseNAT;
 
     public Text serverFeedback;
+    public SaveData[] loadData;
+    public string nameSaveTag;
 
     private List<GameObject> panels = new List<GameObject>();
 
-    public SaveData[] loadData;
+    
 
 
     void Awake()
@@ -50,7 +53,7 @@ public class MenuManager : MonoBehaviour {
     {
         InitializePanels();
         InitializeSliders();
-        StartCoroutine(DelayTextUpdate());
+        NameCheck();
     }
 
     #region GUIInterractions
@@ -96,79 +99,11 @@ public class MenuManager : MonoBehaviour {
         Application.Quit();
     }
 
-    void ServerConnectionFeedback(string message) {
-        serverFeedback.text = message;
-        serverFeedback.color = Color.black;
-    }
 
-    void ServerConnectionFeedback(string message, Color color) {
-        serverFeedback.text = message;
-        serverFeedback.color = color;
-    }
-
-    public void OpenServerEditSettingsPanel(GameObject editSetting) {
-        createServerEditSettingsPanel.SetActive(true);
-    }
-
-    public void CloseServerEditSettingsPanel() {
-        foreach (Transform go in transform)
-        {
-            if(go.gameObject.activeInHierarchy)
-            go.gameObject.SetActive(false);
-        }
-        createServerEditSettingsPanel.SetActive(false);
-    }
 
     IEnumerator DelayTextUpdate() {
         yield return new WaitForEndOfFrame();
         LoadTextData();
-    }
-
-    public void StartServer() {
-       NetworkConnectionError error = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
-       Network.incomingPassword = serverPassword.text;
-       MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text,serverDescription.text);
-
-       switch (error)
-       {
-           case NetworkConnectionError.AlreadyConnectedToServer:
-           case NetworkConnectionError.AlreadyConnectedToAnotherServer:
-               Network.Disconnect();
-               StartServer();
-               break;
-           case NetworkConnectionError.ConnectionBanned:
-               Debug.LogError("Banned from server");
-               ServerConnectionFeedback("Banned from server", Color.red);
-               break;
-           case NetworkConnectionError.InvalidPassword:
-               Debug.LogError("Incorrect password");
-               ServerConnectionFeedback("Incorrect password", Color.red);
-               break;
-           case NetworkConnectionError.TooManyConnectedPlayers:
-               Debug.LogError("Server is full");
-               ServerConnectionFeedback("Server is full");
-               break;
-           case NetworkConnectionError.EmptyConnectTarget:
-               Debug.LogError("No target server entered");
-               ServerConnectionFeedback("Please enter target server");
-               break;
-           case NetworkConnectionError.NATPunchthroughFailed:
-           case NetworkConnectionError.NATTargetConnectionLost:
-           case NetworkConnectionError.NATTargetNotConnected:
-           case NetworkConnectionError.InternalDirectConnectFailed:
-               Debug.LogError("NAT error");
-               ServerConnectionFeedback("Nat error");
-               break;
-           case NetworkConnectionError.RSAPublicKeyMismatch:
-           case NetworkConnectionError.ConnectionFailed:
-           case NetworkConnectionError.CreateSocketOrThreadFailure:
-           case NetworkConnectionError.IncorrectParameters:
-               Debug.LogError("Failed to connect");
-               ServerConnectionFeedback("Failed to connect");
-               break;
-           default: break;
-       }
-
     }
 
     #endregion
@@ -193,6 +128,31 @@ public class MenuManager : MonoBehaviour {
     #endregion
 
     #region SaveMenuData
+    void NameCheck() {
+        if (PlayerPrefs.HasKey(nameSaveTag))
+        {
+            GameManager.instance.name = PlayerPrefs.GetString(nameSaveTag);
+            nameText.text = GameManager.instance.name;
+            print(GameManager.instance.name);
+        }
+        else
+        {
+            enterNamePanel.SetActive(true);
+        }
+    }
+
+    public void SetName(GameObject inputField) {
+        InputField temp = inputField.gameObject.GetComponent<InputField>();
+        //TODO error handeling
+        if (temp.text.Length >= 3)
+        {
+            PlayerPrefs.SetString(nameSaveTag,temp.text);
+            GameManager.instance.name = temp.text;
+            nameText.text = temp.text;
+            temp.text = "";
+            ClosePopupPanel(enterNamePanel);
+        }
+    }
 
     public void SaveTextData() {
         foreach (SaveData loadData in this.loadData)
@@ -209,9 +169,7 @@ public class MenuManager : MonoBehaviour {
             loadData.text.text = temp;
             if (temp != "")
             {
-                loadData.placeHolder.enabled = false;
                 loadData.text.text = temp;
-                
             }
            
         }
@@ -268,16 +226,69 @@ public class MenuManager : MonoBehaviour {
         }
     }
 
+    public void StartServer() {
+        NetworkConnectionError error = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
+        Network.incomingPassword = serverPassword.text;
+        MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text, serverDescription.text);
+
+        switch (error)
+        {
+            case NetworkConnectionError.AlreadyConnectedToServer:
+            case NetworkConnectionError.AlreadyConnectedToAnotherServer:
+                Network.Disconnect();
+                StartServer();
+                break;
+            case NetworkConnectionError.ConnectionBanned:
+                Debug.LogError("Banned from server");
+                ServerConnectionFeedback("Banned from server", Color.red);
+                break;
+            case NetworkConnectionError.InvalidPassword:
+                Debug.LogError("Incorrect password");
+                ServerConnectionFeedback("Incorrect password", Color.red);
+                break;
+            case NetworkConnectionError.TooManyConnectedPlayers:
+                Debug.LogError("Server is full");
+                ServerConnectionFeedback("Server is full");
+                break;
+            case NetworkConnectionError.EmptyConnectTarget:
+                Debug.LogError("No target server entered");
+                ServerConnectionFeedback("Please enter target server");
+                break;
+            case NetworkConnectionError.NATPunchthroughFailed:
+            case NetworkConnectionError.NATTargetConnectionLost:
+            case NetworkConnectionError.NATTargetNotConnected:
+            case NetworkConnectionError.InternalDirectConnectFailed:
+                Debug.LogError("NAT error");
+                ServerConnectionFeedback("Nat error");
+                break;
+            case NetworkConnectionError.RSAPublicKeyMismatch:
+            case NetworkConnectionError.ConnectionFailed:
+            case NetworkConnectionError.CreateSocketOrThreadFailure:
+            case NetworkConnectionError.IncorrectParameters:
+                Debug.LogError("Failed to connect");
+                ServerConnectionFeedback("Failed to connect");
+                break;
+            default: break;
+        }
+    }
+
+    void ServerConnectionFeedback(string message) {
+        serverFeedback.text = message;
+        serverFeedback.color = Color.black;
+    }
+
+    void ServerConnectionFeedback(string message, Color color) {
+        serverFeedback.text = message;
+        serverFeedback.color = color;
+    }
 
     #endregion
 }
 [System.Serializable]
 public struct SaveData{
     public string saveTag;
-    public Text text;
-    public Text placeHolder;
-
-
+    public InputField text;
 }
+
 
 

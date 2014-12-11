@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Lobby : MonoBehaviour {
     GameObject playerEntry;
-    Dictionary<NetworkPlayer, GameObject> connectedPlayers = new Dictionary<NetworkPlayer, GameObject>();
+    
 
     GameObject team1;
     GameObject team2;
@@ -28,9 +28,7 @@ public class Lobby : MonoBehaviour {
     }
 
     void PlayerJoin(NetworkPlayer networkPlayer) {
-        GameObject go = (GameObject)GameObject.Instantiate(playerEntry);
-        go.transform.parent = team1.transform;
-        connectedPlayers.Add(networkPlayer, go);
+
 
 
 
