@@ -512,7 +512,6 @@ MonoBehaviour:
   m_Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Priority: 3
   ignoreReversedGraphics: 1
   blockingObjects: 0
   m_BlockingMask:
@@ -1037,6 +1036,7 @@ GameObject:
   - 224: {fileID: 1229849836}
   - 222: {fileID: 1229849838}
   - 114: {fileID: 1229849837}
+  - 114: {fileID: 1229849839}
   m_Layer: 5
   m_Name: PlayerEntry
   m_TagString: Untagged
@@ -1092,6 +1092,18 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1229849835}
+--- !u!114 &1229849839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1229849835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d46b186fa40d76f428873825ec081307, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: {fileID: 2082171405}
 --- !u!1 &1465666670
 GameObject:
   m_ObjectHideFlags: 0
