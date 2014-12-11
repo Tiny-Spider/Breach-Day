@@ -198,7 +198,7 @@ public class MenuManager : MonoBehaviour {
         foreach (SaveData loadData in this.loadData)
         {
             PlayerPrefs.SetString(loadData.saveTag, loadData.text.text);
-            print(PlayerPrefs.GetString(loadData.saveTag));
+           // print(PlayerPrefs.GetString(loadData.saveTag));
         }
     }
 
@@ -206,11 +206,9 @@ public class MenuManager : MonoBehaviour {
         foreach (SaveData loadData in this.loadData)
         {
             string temp = PlayerPrefs.GetString(loadData.saveTag, "");
-            print(temp);
             loadData.text.text = temp;
             if (temp != "")
             {
-                print("disable placeholder");
                 loadData.placeHolder.enabled = false;
                 loadData.text.text = temp;
                 
