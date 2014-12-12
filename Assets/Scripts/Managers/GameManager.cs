@@ -4,13 +4,11 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
-    public Level[] levels;
     public string name = "Player";
+    public string uniqueGameType = "breach_day";
 
     public Mode mode;
     public WorldSettings worldSettings;
-
-    public string uniqueGameType = "breach_day";
 
 	void Awake () {
         instance = this;

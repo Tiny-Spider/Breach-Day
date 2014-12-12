@@ -5,8 +5,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour {
     public float walkSpeed = 6.0f;
     public float runSpeed = 10.0f;
@@ -41,27 +40,24 @@ public class PlayerController : MonoBehaviour {
 
     private Vector3 moveDirection = Vector3.zero;
     private bool grounded = false;
+    private CharacterController controller;
     private Transform myTransform;
     private float speed;
     private RaycastHit hit;
     private float fallStartLevel;
     private bool falling;
-    public float slideLimit;
+    private float slideLimit;
     private float rayDistance;
     private Vector3 contactPoint;
     private bool playerControl = false;
     private int jumpTimer;
-    private RaycastHit groundHit;
 
     void Start() {
-        //controller = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
         myTransform = transform;
         speed = walkSpeed;
-
-        CapsuleCollider capsuleCollider = GetComponent<CapsuleCollider>();
-
-        rayDistance = capsuleCollider.height * .5f + capsuleCollider.radius;
-        //slideLimit = controller.slopeLimit - .1f;
+        rayDistance = controller.height * .5f + controller.radius;
+        slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
     }
 
@@ -108,7 +104,7 @@ public class PlayerController : MonoBehaviour {
             }
             // Otherwise recalculate moveDirection directly from axes, adding a bit of -y to avoid bumping down inclines
             else {
-                moveDirection = new Vector3(inputX * inputModifyFactor, 0 /*-antiBumpFactor */, inputY * inputModifyFactor);
+                moveDirection = new Vector3(inputX * inputModifyFactor, -antiBumpFactor, inputY * inputModifyFactor);
                 moveDirection = myTransform.TransformDirection(moveDirection) * speed;
                 playerControl = true;
             }
@@ -137,19 +133,10 @@ public class PlayerController : MonoBehaviour {
         }
 
         // Apply gravity
-        //moveDirection.y -= gravity * Time.deltaTime;
+        moveDirection.y -= gravity * Time.deltaTime;
 
         // Move the controller, and set grounded true or false depending on whether we're standing on something
-        //grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
-
-        Debug.Log(moveDirection);
-
-        rigidbody.velocity = moveDirection; // * Time.deltaTime;
-
-        
-        //if (Physics.Raycast(transform.position, -transform.up, out groundHit)) {
-            grounded = true;// = groundHit.distance < 0.05F;
-        //}
+        grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
     }
 
     // Store point that we're in contact with for use in FixedUpdate if needed
