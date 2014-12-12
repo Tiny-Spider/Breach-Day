@@ -29,11 +29,13 @@ public class MenuManager : MonoBehaviour {
     public InputField serverPassword;
     public Toggle serverUseNAT;
 
-    public Text serverFeedback;
+    public Text createServerFeedback;
+    public Text directConnectFeedback;
     public SaveData[] loadData;
     public string nameSaveTag;
 
     private List<GameObject> panels = new List<GameObject>();
+    private const string retryError = "retry";
 
     
 
@@ -41,12 +43,6 @@ public class MenuManager : MonoBehaviour {
     void Awake()
     {
         instance = this;
-    }
-
-    void Update(){
-        if(Input.GetKey(KeyCode.T)){
-            LoadTextData();
-        }
     }
 
     void Start()
@@ -180,6 +176,8 @@ public class MenuManager : MonoBehaviour {
     #region Server
     public void TryConnectToServer() {
         int port;
+        print("hi");
+        ServerConnectionFeedback(directConnectFeedback, "Connecting..", Color.black);
         if (int.TryParse(directConnectPort.text, out port))
         {
             NetworkConnectionError error = Network.Connect(directConnectIP.text, port, serverPassword.text);
@@ -193,93 +191,99 @@ public class MenuManager : MonoBehaviour {
                     break;
                 case NetworkConnectionError.ConnectionBanned:
                     Debug.LogError("Banned from server");
-                    ServerConnectionFeedback("Banned from server", Color.red);
+                    ServerConnectionFeedback(directConnectFeedback, "Banned from server", Color.red);
                     break;
                 case NetworkConnectionError.InvalidPassword:
                     Debug.LogError("Incorrect password");
-                    ServerConnectionFeedback("Incorrect password", Color.red);
+                    ServerConnectionFeedback(directConnectFeedback, "Incorrect password", Color.red);
                     break;
                 case NetworkConnectionError.TooManyConnectedPlayers:
                     Debug.LogError("Server is full");
-                    ServerConnectionFeedback("Server is full");
+                    ServerConnectionFeedback(directConnectFeedback, "Server is full");
                     break;
                 case NetworkConnectionError.EmptyConnectTarget:
                     Debug.LogError("No target server entered");
-                    ServerConnectionFeedback("Please enter target server");
+                    ServerConnectionFeedback(directConnectFeedback, "Please enter target server");
                     break;
                 case NetworkConnectionError.NATPunchthroughFailed:
                 case NetworkConnectionError.NATTargetConnectionLost:
                 case NetworkConnectionError.NATTargetNotConnected:
                 case NetworkConnectionError.InternalDirectConnectFailed:
                     Debug.LogError("NAT error");
-                    ServerConnectionFeedback("Nat error");
+                    ServerConnectionFeedback(directConnectFeedback, "NAT error", Color.red);
                     break;
                 case NetworkConnectionError.RSAPublicKeyMismatch:
                 case NetworkConnectionError.ConnectionFailed:
                 case NetworkConnectionError.CreateSocketOrThreadFailure:
                 case NetworkConnectionError.IncorrectParameters:
                     Debug.LogError("Failed to connect");
-                    ServerConnectionFeedback("Failed to connect");
+                    ServerConnectionFeedback(directConnectFeedback, "Failed to connect", Color.red);
                     break;
                 default: break;
             }
         }
+        else
+        {
+            ServerConnectionFeedback(directConnectFeedback, "Please enter valid input", Color.black);
+        }
     }
 
     public void StartServer() {
-        NetworkConnectionError error = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
+        ServerConnectionFeedback(createServerFeedback, "Connecting..", Color.black);
+        NetworkConnectionError networkError = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
         Network.incomingPassword = serverPassword.text;
         MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text, serverDescription.text);
 
+        string error = GetNetworkError(networkError);
+        if (error.Equals(retryError))
+        {
+            Network.Disconnect();
+            StartServer();
+        }
+        else
+        {
+            ServerConnectionFeedback(createServerFeedback, error, Color.red);
+        }
+    }
+
+
+    void OnFailedToConnect(NetworkConnectionError error) {
+        ServerConnectionFeedback(directConnectFeedback, GetNetworkError(error), Color.red);
+    }
+
+    void ServerConnectionFeedback(Text infobox, string message) {
+        infobox.text = message;
+        infobox.color = Color.black;
+    }
+
+    void ServerConnectionFeedback(Text infobox, string message, Color color) {
+        infobox.text = message;
+        infobox.color = color;
+    }
+
+    string GetNetworkError(NetworkConnectionError error) {
+        Debug.LogError(error);
         switch (error)
         {
             case NetworkConnectionError.AlreadyConnectedToServer:
             case NetworkConnectionError.AlreadyConnectedToAnotherServer:
-                Network.Disconnect();
-                StartServer();
-                break;
+                return retryError;
             case NetworkConnectionError.ConnectionBanned:
-                Debug.LogError("Banned from server");
-                ServerConnectionFeedback("Banned from server", Color.red);
-                break;
+                return "Banned from server";
             case NetworkConnectionError.InvalidPassword:
-                Debug.LogError("Incorrect password");
-                ServerConnectionFeedback("Incorrect password", Color.red);
-                break;
+                return "Incorrect password";
             case NetworkConnectionError.TooManyConnectedPlayers:
-                Debug.LogError("Server is full");
-                ServerConnectionFeedback("Server is full");
-                break;
+                return "Server is full";
             case NetworkConnectionError.EmptyConnectTarget:
-                Debug.LogError("No target server entered");
-                ServerConnectionFeedback("Please enter target server");
-                break;
+                return "Please enter target server";
             case NetworkConnectionError.NATPunchthroughFailed:
             case NetworkConnectionError.NATTargetConnectionLost:
             case NetworkConnectionError.NATTargetNotConnected:
             case NetworkConnectionError.InternalDirectConnectFailed:
-                Debug.LogError("NAT error");
-                ServerConnectionFeedback("Nat error");
-                break;
-            case NetworkConnectionError.RSAPublicKeyMismatch:
-            case NetworkConnectionError.ConnectionFailed:
-            case NetworkConnectionError.CreateSocketOrThreadFailure:
-            case NetworkConnectionError.IncorrectParameters:
-                Debug.LogError("Failed to connect");
-                ServerConnectionFeedback("Failed to connect");
-                break;
-            default: break;
+                return "Nat error";
+            default:
+                return "Failed to connect";
         }
-    }
-
-    void ServerConnectionFeedback(string message) {
-        serverFeedback.text = message;
-        serverFeedback.color = Color.black;
-    }
-
-    void ServerConnectionFeedback(string message, Color color) {
-        serverFeedback.text = message;
-        serverFeedback.color = color;
     }
 
     #endregion
