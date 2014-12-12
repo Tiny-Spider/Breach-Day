@@ -42,6 +42,13 @@ public class NetworkManager : MonoBehaviour {
 
     void OnConnect() {
         Application.LoadLevel(lobbyScene);
+       // UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
+        StartCoroutine(a());
+    }
+
+    IEnumerator a() {
+        Debug.Log("OnConnect");
+        yield return new WaitForSeconds(5.0F);
         UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
     }
 
@@ -106,6 +113,9 @@ public class NetworkManager : MonoBehaviour {
             if (playerInfo != null) {
                 playerInfo.SetValue(setting, value);
             }
+            else {
+                Debug.Log("Player \"" + player.ToString() + "\" not found!");
+            }
 
         } else {
             // Recived an update from client, do some checks before sending it to others
@@ -158,6 +168,10 @@ public class NetworkManager : MonoBehaviour {
         Debug.Log("Connected Players:" + connected);
     }
 
+    public void UpdateInfo(NetworkPlayer player, string setting, string value) {
+        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, player, setting, value);
+    }
+
     public void UpdateMyInfo(string setting, string value) {
         networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, Network.player, setting, value);
     }
@@ -174,6 +188,6 @@ public class NetworkManager : MonoBehaviour {
 
     [RPC]
     public void _StartGame() {
-        Application.LoadLevel("Map 1");
+        Application.LoadLevel("Map_1");
     }
 }

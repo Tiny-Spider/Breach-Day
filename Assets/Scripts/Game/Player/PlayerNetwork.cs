@@ -3,6 +3,8 @@ using System.Collections;
 
 [RequireComponent(typeof(NetworkView))]
 public class PlayerNetwork : MonoBehaviour {
+    public Camera camera;
+
     public NetworkPlayer owner;
     public float lerpSpeed = 0.2F;
     public float maxMoveDistance = 1.0F;
@@ -31,10 +33,19 @@ public class PlayerNetwork : MonoBehaviour {
     [RPC]
     void SetPlayer(NetworkPlayer player) {
         owner = player;
+        transform.parent = FindObjectOfType<PlayerSpawner>().playerHolder;
+
+        string name = NetworkManager.instance.connectedPlayers[player].name;
+        transform.name = name;
 
         if (owner == null || owner != Network.player) {
-            Destroy(GetComponent<CharacterController>());
+            Debug.Log("[" + name + " (" + player.ToString() + ")] Disabling Control!");
             Destroy(GetComponent<PlayerController>());
+            Destroy(GetComponent<CharacterController>());
+            Destroy(camera.gameObject);
+        }
+        else {
+            Debug.Log("[" + name + " (" + player.ToString() + ")] Enabling Control!");
         }
     }
 
