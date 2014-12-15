@@ -8,6 +8,7 @@ public class MenuManager : MonoBehaviour {
 
     public GameObject mainPanel;
     public GameObject enterNamePanel;
+    public GameObject preventInputPanel;
 
     public Slider soundSlider;
     public Slider musicSlider;
@@ -19,8 +20,6 @@ public class MenuManager : MonoBehaviour {
     public InputField directConnectIP;
     public InputField directConnectPort;
     public InputField directConnectPassword;
-
-
 
     public InputField serverName;
     public InputField serverDescription;
@@ -37,9 +36,6 @@ public class MenuManager : MonoBehaviour {
     private List<GameObject> panels = new List<GameObject>();
     private const string retryError = "retry";
 
-    
-
-
     void Awake()
     {
         instance = this;
@@ -50,6 +46,7 @@ public class MenuManager : MonoBehaviour {
         InitializePanels();
         InitializeSliders();
         NameCheck();
+        LoadTextData();
     }
 
     #region GUIInterractions
@@ -95,13 +92,6 @@ public class MenuManager : MonoBehaviour {
         Application.Quit();
     }
 
-
-
-    IEnumerator DelayTextUpdate() {
-        yield return new WaitForEndOfFrame();
-        LoadTextData();
-    }
-
     #endregion
 
     #region SoundControl
@@ -125,6 +115,7 @@ public class MenuManager : MonoBehaviour {
 
     #region SaveMenuData
     void NameCheck() {
+        //Check for the username to initialize it into the menu scene. Also sets the name to the GameManager.
         if (PlayerPrefs.HasKey(nameSaveTag))
         {
             GameManager.instance.name = PlayerPrefs.GetString(nameSaveTag);
@@ -139,7 +130,6 @@ public class MenuManager : MonoBehaviour {
 
     public void SetName(GameObject inputField) {
         InputField temp = inputField.gameObject.GetComponent<InputField>();
-        //TODO error handeling
         if (temp.text.Length >= 3)
         {
             PlayerPrefs.SetString(nameSaveTag,temp.text);
@@ -154,11 +144,11 @@ public class MenuManager : MonoBehaviour {
         foreach (SaveData loadData in this.loadData)
         {
             PlayerPrefs.SetString(loadData.saveTag, loadData.text.text);
-           // print(PlayerPrefs.GetString(loadData.saveTag));
         }
     }
 
     public void LoadTextData() {
+        //Loads every set text that is added in the inspector.
         foreach (SaveData loadData in this.loadData)
         {
             string temp = PlayerPrefs.GetString(loadData.saveTag, "");
@@ -166,8 +156,7 @@ public class MenuManager : MonoBehaviour {
             if (temp != "")
             {
                 loadData.text.text = temp;
-            }
-           
+            } 
         }
     }
 
@@ -175,60 +164,22 @@ public class MenuManager : MonoBehaviour {
 
     #region Server
     public void TryConnectToServer() {
+        //Tries connecting to the given address. Also handles any errors that may occur, and sends the feedback through into the GUI.
         int port;
-        print("hi");
         ServerConnectionFeedback(directConnectFeedback, "Connecting..", Color.black);
         if (int.TryParse(directConnectPort.text, out port))
         {
             NetworkConnectionError error = Network.Connect(directConnectIP.text, port, serverPassword.text);
-            print(error);
-            switch (error)
-            {
-                case NetworkConnectionError.AlreadyConnectedToServer:
-                case NetworkConnectionError.AlreadyConnectedToAnotherServer:
-                    Network.Disconnect();
-                    TryConnectToServer();
-                    break;
-                case NetworkConnectionError.ConnectionBanned:
-                    Debug.LogError("Banned from server");
-                    ServerConnectionFeedback(directConnectFeedback, "Banned from server", Color.red);
-                    break;
-                case NetworkConnectionError.InvalidPassword:
-                    Debug.LogError("Incorrect password");
-                    ServerConnectionFeedback(directConnectFeedback, "Incorrect password", Color.red);
-                    break;
-                case NetworkConnectionError.TooManyConnectedPlayers:
-                    Debug.LogError("Server is full");
-                    ServerConnectionFeedback(directConnectFeedback, "Server is full");
-                    break;
-                case NetworkConnectionError.EmptyConnectTarget:
-                    Debug.LogError("No target server entered");
-                    ServerConnectionFeedback(directConnectFeedback, "Please enter target server");
-                    break;
-                case NetworkConnectionError.NATPunchthroughFailed:
-                case NetworkConnectionError.NATTargetConnectionLost:
-                case NetworkConnectionError.NATTargetNotConnected:
-                case NetworkConnectionError.InternalDirectConnectFailed:
-                    Debug.LogError("NAT error");
-                    ServerConnectionFeedback(directConnectFeedback, "NAT error", Color.red);
-                    break;
-                case NetworkConnectionError.RSAPublicKeyMismatch:
-                case NetworkConnectionError.ConnectionFailed:
-                case NetworkConnectionError.CreateSocketOrThreadFailure:
-                case NetworkConnectionError.IncorrectParameters:
-                    Debug.LogError("Failed to connect");
-                    ServerConnectionFeedback(directConnectFeedback, "Failed to connect", Color.red);
-                    break;
-                default: break;
-            }
+            ServerConnectionFeedback(directConnectFeedback, GetNetworkError(error));
         }
         else
         {
-            ServerConnectionFeedback(directConnectFeedback, "Please enter valid input", Color.black);
+            ServerConnectionFeedback(directConnectFeedback, "Please enter valid input", Color.red);
         }
     }
 
     public void StartServer() {
+        //Attepts to start a server with the given settings. Also handles any error feedback back into the GUI.
         ServerConnectionFeedback(createServerFeedback, "Connecting..", Color.black);
         NetworkConnectionError networkError = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
         Network.incomingPassword = serverPassword.text;
@@ -262,9 +213,12 @@ public class MenuManager : MonoBehaviour {
     }
 
     string GetNetworkError(NetworkConnectionError error) {
-        Debug.LogError(error);
+        Debug.Log(error);
+        preventInputPanel.SetActive(error.Equals(NetworkConnectionError.NoError));
         switch (error)
         {
+            case NetworkConnectionError.NoError:
+                return "Connecting..";
             case NetworkConnectionError.AlreadyConnectedToServer:
             case NetworkConnectionError.AlreadyConnectedToAnotherServer:
                 return retryError;
