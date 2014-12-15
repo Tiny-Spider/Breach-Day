@@ -32,24 +32,13 @@ public class NetworkManager : MonoBehaviour {
 
     // Whenever you connect, server or client we should load the lobby.
     void OnConnectedToServer() {
-        OnConnect();
+        Application.LoadLevel(lobbyScene);
     }
 
     void OnServerInitialized() {
-        networkView.RPC("AddPlayer", RPCMode.AllBuffered, Network.player);
-        OnConnect();
-    }
-
-    void OnConnect() {
         Application.LoadLevel(lobbyScene);
-       // UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
-        StartCoroutine(a());
-    }
-
-    IEnumerator a() {
-        Debug.Log("OnConnect");
-        yield return new WaitForSeconds(5.0F);
-        UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
+        networkView.RPC("AddPlayer", RPCMode.AllBuffered, Network.player);
+        //UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
     }
 
     #endregion
@@ -85,7 +74,13 @@ public class NetworkManager : MonoBehaviour {
     [RPC]
     public void AddPlayer(NetworkPlayer player) {
         connectedPlayers.Add(player, new PlayerInfo());
-        Debug.Log("Added new player! \"" + player.ToString() + "\"");
+        Debug.Log("Added new player \"" + player.ToString() + "\"");
+        
+        // Senpai server noticed me, let's send him our name
+        if (player.Equals(Network.player)) {
+            UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
+        }
+
         OnJoin(player);
     }
 
@@ -160,12 +155,12 @@ public class NetworkManager : MonoBehaviour {
             }
         }
 
-        string connected = " ";
+        string connected = "";
         foreach (PlayerInfo a in connectedPlayers.Values) {
-            connected += a.name + " ";
+            connected += "(" + a.name + ") ";
         }
 
-        Debug.Log("Connected Players:" + connected);
+        Debug.Log("Connected Players: " + connected);
     }
 
     public void UpdateInfo(NetworkPlayer player, string setting, string value) {

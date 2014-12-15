@@ -42,7 +42,6 @@ GameObject:
   - 148: {fileID: 14800000}
   - 114: {fileID: 11400018}
   - 114: {fileID: 11400002}
-  - 114: {fileID: 11400008}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -319,22 +318,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomFOV: 40
   zoomSpeed: 9
---- !u!114 &11400008
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 931b0946a2b0403409d4cff7e6ae638a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera: {fileID: 2000000}
-  lerpSpeed: .200000003
-  maxMoveDistance: 1
-  realPosition: {x: 0, y: 0, z: 0}
-  realRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &11400010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -419,9 +402,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 931b0946a2b0403409d4cff7e6ae638a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
+  camera: {fileID: 2000000}
   lerpSpeed: .200000003
-  maxMoveDistance: 1
+  maxMoveDistance: 2
   realPosition: {x: 0, y: 0, z: 0}
   realRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &11400020
@@ -490,8 +473,8 @@ NetworkView:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
-  m_StateSynchronization: 1
-  m_Observed: {fileID: 400002}
+  m_StateSynchronization: 0
+  m_Observed: {fileID: 0}
   m_ViewID:
     m_ID: 0
     m_Type: 0

@@ -14,4 +14,9 @@ public class GameManager : MonoBehaviour {
         instance = this;
         DontDestroyOnLoad(gameObject);
 	}
+
+    [RPC]
+    public void GetName() {
+        NetworkManager.instance.UpdateMyInfo(PlayerInfo.NAME, name);
+    }
 }

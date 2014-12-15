@@ -17,7 +17,7 @@ public class PlayerNetwork : MonoBehaviour {
         realRotation = transform.rotation;
     }
 
-    void Update() {
+    void FixedUpdate() {
         if (owner != null && owner == Network.player) {
             if (Network.isClient)
                 networkView.RPC("UpdatePosition", RPCMode.Server, transform.position, transform.rotation);
@@ -31,7 +31,7 @@ public class PlayerNetwork : MonoBehaviour {
     }
 
     [RPC]
-    void SetPlayer(NetworkPlayer player) {
+    void SetPlayer(NetworkPlayer player, NetworkMessageInfo info) {
         owner = player;
         transform.parent = FindObjectOfType<PlayerSpawner>().playerHolder;
 
