@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
     public string uniqueGameType = "breach_day";
 
     public Mode mode;
-    public WorldSettings worldSettings;
+    public WorldSettings worldSettings = new WorldSettings("Map_1", true, 10, 10);
 
 	void Awake () {
         instance = this;
