@@ -6,7 +6,7 @@ public class Wall : MonoBehaviour {
     public GameObject[] pieces;
 
     public void SetActive(bool enable) {
-        SetActive(!enable);
+        gameObject.SetActive(!enable);
 
         if (enable) {
             foreach (GameObject piece in pieces) {

@@ -17,7 +17,7 @@ public class Lobby : MonoBehaviour {
         // Not really required, since OnJoin is only called on a server
         // But it's always good to be safe
         if (Network.isServer) {
-            NetworkManager.instance.UpdateInfo(networkPlayer, PlayerInfo.TEAM, "teamA");
+            NetworkManager.instance.UpdateInfo(networkPlayer, PlayerInfo.TEAM, "1");
         }
     }
 

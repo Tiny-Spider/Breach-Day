@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(NetworkView))]
 public class PlayerNetwork : MonoBehaviour {
-    public Camera camera;
+    public Component[] clientComponents;
 
     public NetworkPlayer owner;
     public float lerpSpeed = 0.2F;
@@ -19,8 +19,13 @@ public class PlayerNetwork : MonoBehaviour {
 
     void FixedUpdate() {
         if (owner != null && owner == Network.player) {
-           if (Network.isClient)
+            if (Network.isClient) {
                 networkView.RPC("UpdatePosition", RPCMode.Server, transform.position, transform.rotation);
+            }
+            //else {
+            //    realPosition = transform.position;
+            //    realRotation = transform.rotation;
+            //}
         }
 
         // Don't update myself!
@@ -33,16 +38,17 @@ public class PlayerNetwork : MonoBehaviour {
     [RPC]
     void SetPlayer(NetworkPlayer player, NetworkMessageInfo info) {
         owner = player;
-        transform.parent = FindObjectOfType<PlayerSpawner>().playerHolder;
+        transform.parent = FindObjectOfType<World>().playerHolder;
 
         string name = NetworkManager.instance.connectedPlayers[player].name;
         transform.name = name;
 
         if (owner == null || owner != Network.player) {
             Debug.Log("[" + name + " (" + player.ToString() + ")] Disabling Control!");
-            Destroy(GetComponent<PlayerController>());
-            Destroy(GetComponent<CharacterController>());
-            Destroy(camera.gameObject);
+
+            foreach(Component component in clientComponents) {
+               ((Behaviour) component).enabled = false;
+            }
         }
         else {
             Debug.Log("[" + name + " (" + player.ToString() + ")] Enabling Control!");
