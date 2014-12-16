@@ -19,7 +19,7 @@ public class PlayerNetwork : MonoBehaviour {
 
     void FixedUpdate() {
         if (owner != null && owner == Network.player) {
-            if (Network.isClient)
+           if (Network.isClient)
                 networkView.RPC("UpdatePosition", RPCMode.Server, transform.position, transform.rotation);
         }
 

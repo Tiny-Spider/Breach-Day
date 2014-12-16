@@ -78,10 +78,17 @@ public class NetworkManager : MonoBehaviour {
         
         // Senpai server noticed me, let's send him our name
         if (player.Equals(Network.player)) {
-            UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
+            Debug.Log("Added myself! Updating my name: " + Network.player.ToString() + " | " + player.ToString());
+            //UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
+            StartCoroutine(SendInfo());
         }
 
         OnJoin(player);
+    }
+
+    IEnumerator SendInfo() {
+        yield return new WaitForSeconds(0.1F);
+        UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
     }
 
     [RPC]
@@ -95,12 +102,12 @@ public class NetworkManager : MonoBehaviour {
 
     // Can only be called over RPC due to networkmessageinfo parameter
     [RPC]
-    public void UpdatePlayer(NetworkPlayer player, string setting, string value, NetworkMessageInfo info) {
-        Debug.Log("UpdatePlayer");
+    public void UpdatePlayer(NetworkPlayer player, string setting, string value, bool set, NetworkMessageInfo info) {
+        //Debug.Log("UpdatePlayer");
 
         // Sender is server, server may always update
-        if ((Network.isServer && networkView.isMine) || info.sender == Network.connections[0]) {
-            Debug.Log("Update from server");
+        if (set) {
+            Debug.Log("Update from server: " + info.sender.ToString() + " | " + player.ToString() + " | " + setting + " | " + value);
 
             // Update the profile of the person
             PlayerInfo playerInfo = connectedPlayers[player];
@@ -115,11 +122,12 @@ public class NetworkManager : MonoBehaviour {
         } else {
             // Recived an update from client, do some checks before sending it to others
             if (Network.isServer) {
-                Debug.Log("Update from client");
+                Debug.Log("Update from client: " + info.sender.ToString() + " | " + player.ToString() + " | " + setting + " | " + value);
 
                 switch (setting) {
                     case PlayerInfo.NAME:
                         // Check for invalid name, for example swearing
+                        /*
                         if (value.Contains("fuck")) {
                             networkView.RPC("ServerNotification", player, "Your name is inappropiate, you have been kicked!");
                             Network.CloseConnection(player, true);
@@ -136,15 +144,16 @@ public class NetworkManager : MonoBehaviour {
                             Network.CloseConnection(player, true);
                             return;
                         }
+                        */
 
                         // All is good, send the others information
-                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value);
+                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value, true);
 
                         break;
                     case PlayerInfo.TEAM:
 
                         // All is good, send the others information
-                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value);
+                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value, true);
 
                         break;
                     default:
@@ -164,11 +173,11 @@ public class NetworkManager : MonoBehaviour {
     }
 
     public void UpdateInfo(NetworkPlayer player, string setting, string value) {
-        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, player, setting, value);
+        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, player, setting, value, Network.isServer);
     }
 
     public void UpdateMyInfo(string setting, string value) {
-        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, Network.player, setting, value);
+        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, Network.player, setting, value, Network.isServer);
     }
 
     [RPC]
