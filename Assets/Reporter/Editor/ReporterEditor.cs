@@ -23,7 +23,6 @@ public class MyAssetModificationProcessor : UnityEditor.AssetModificationProcess
 	    {
 			if( !EditorApplication.isCompiling && isCompiling )
 			{
-	        	Debug.Log("Finish Compile");
 				if( !Directory.Exists( Application.dataPath + "/StreamingAssets"))
 				{
 					Directory.CreateDirectory( Application.dataPath + "/StreamingAssets");
