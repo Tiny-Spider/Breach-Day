@@ -1723,11 +1723,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 752948586}
   m_RootOrder: 7
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -148.300003, y: 164}
-  m_SizeDelta: {x: 242.699997, y: 38}
-  m_Pivot: {x: .5, y: .5}
+  m_AnchorMin: {x: .71687901, y: .308000028}
+  m_AnchorMax: {x: .97565943, y: .383629173}
+  m_AnchoredPosition: {x: 1.14981031, y: .500015259}
+  m_SizeDelta: {x: 2.09997559, y: 0}
+  m_Pivot: {x: .99999994, y: -1.49011612e-08}
 --- !u!114 &232440260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5068,12 +5068,12 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -6603,10 +6603,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 752948586}
   m_RootOrder: 2
-  m_AnchorMin: {x: .5, y: 1}
-  m_AnchorMax: {x: .5, y: 1}
-  m_AnchoredPosition: {x: -37, y: -49}
-  m_SizeDelta: {x: 553, y: 85}
+  m_AnchorMin: {x: .144128233, y: .798000038}
+  m_AnchorMax: {x: .775623202, y: 1}
+  m_AnchoredPosition: {x: -1.5, y: 1.5}
+  m_SizeDelta: {x: -8, y: -16}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &953678610
 MonoBehaviour:
@@ -11413,17 +11413,17 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1759449493}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: .000488281221, w: .999999881}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 752948586}
   m_RootOrder: 1
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -243, y: 176.5}
-  m_SizeDelta: {x: 491, y: 353}
-  m_Pivot: {x: .5, y: .5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 6.65731812, y: .930912018}
+  m_SizeDelta: {x: -381, y: -156}
+  m_Pivot: {x: .999977827, y: -.00140336528}
 --- !u!1 &1792815996
 GameObject:
   m_ObjectHideFlags: 0
