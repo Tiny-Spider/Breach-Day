@@ -8,6 +8,8 @@ public class Lobby : MonoBehaviour {
     GameObject team1;
     GameObject team2;
 
+
+
 	void Start () {
         NetworkManager.instance.OnJoin += PlayerJoin;
         NetworkManager.instance.UpdateMyInfo(PlayerInfo.TEAM, "1");
@@ -28,5 +30,13 @@ public class Lobby : MonoBehaviour {
 
     public void LoadMainMenu() {
         Application.LoadLevel(1);
+    }
+
+    public void OpenPopupPanel(GameObject panel) {
+        panel.SetActive(true);
+    }
+
+    public void ClosePopupPanel(GameObject panel) {
+        panel.SetActive(false);
     }
 }
