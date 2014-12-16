@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(NetworkView))]
 public class NetworkManager : MonoBehaviour {
-    public static NetworkManager instance;
+    public static NetworkManager instance { private set; get; }
 
     public delegate void OnServerNotification(string message);
     public event OnServerNotification OnNote = delegate { };
@@ -38,7 +38,6 @@ public class NetworkManager : MonoBehaviour {
     void OnServerInitialized() {
         Application.LoadLevel(lobbyScene);
         networkView.RPC("AddPlayer", RPCMode.AllBuffered, Network.player);
-        //UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
     }
 
     #endregion
@@ -79,7 +78,6 @@ public class NetworkManager : MonoBehaviour {
         // Senpai server noticed me, let's send him our name
         if (player.Equals(Network.player)) {
             Debug.Log("Added myself! Updating my name: " + Network.player.ToString() + " | " + player.ToString());
-            //UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
             StartCoroutine(SendInfo());
         }
 

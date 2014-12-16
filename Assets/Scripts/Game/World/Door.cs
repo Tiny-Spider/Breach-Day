@@ -7,6 +7,6 @@ public class Door : MonoBehaviour {
 
     public void SetActive(bool enable) {
         noDoorObject.SetActive(!enable);
-        SetActive(enable);
+        gameObject.SetActive(enable);
     }
 }

@@ -8,20 +8,27 @@ public class PlayerInfo {
 
 
     public string name { private set; get; }
-    public string team { private set; get; }
+    public int team { private set; get; }
     public int ping { private set; get; }
 
     public bool SetValue(string setting, string value) {
+        bool succes;
+
         switch (setting) {
             case NAME:
                 name = value;
                 return true;
             case TEAM:
-                team = value;
-                return true;
+                int team = 0;
+                succes = int.TryParse(value, out team);
+
+                if (succes)
+                    this.team = team;
+
+                return succes;
             case PING:
                 int ping = 0;
-                bool succes = int.TryParse(value, out ping);
+                succes = int.TryParse(value, out ping);
  
                 if (succes) 
                     this.ping = ping;

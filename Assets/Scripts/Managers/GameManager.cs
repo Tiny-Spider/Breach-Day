@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
-    public static GameManager instance;
+    public static GameManager instance { private set; get; }
 
     public string name = "Player";
     public string uniqueGameType = "breach_day";

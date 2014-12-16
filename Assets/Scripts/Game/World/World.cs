@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class World : MonoBehaviour {
+    public static World instance { private set; get; }
+
     public List<Door> doors;
     public List<Wall> walls;
+
+    public Transform playerHolder;
 
     public Dictionary<NetworkPlayer, Player> players = new Dictionary<NetworkPlayer, Player>();
 
