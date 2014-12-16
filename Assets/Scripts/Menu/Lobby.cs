@@ -10,7 +10,7 @@ public class Lobby : MonoBehaviour {
 
 	void Start () {
         NetworkManager.instance.OnJoin += PlayerJoin;
-        NetworkManager.instance.UpdateMyInfo(PlayerInfo.TEAM, "teamA");
+        NetworkManager.instance.UpdateMyInfo(PlayerInfo.TEAM, "1");
 	}
 
     void PlayerJoin(NetworkPlayer networkPlayer) {
