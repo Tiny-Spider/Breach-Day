@@ -3,10 +3,11 @@ using System.Collections;
 
 // Should be placed on door object
 public class Door : MonoBehaviour {
-    public GameObject noDoorObject;
+    public GameObject disabledDoor;
+    public GameObject enabledDoor;
 
-    public void SetActive(bool enable) {
-        noDoorObject.SetActive(!enable);
-        gameObject.SetActive(enable);
+    public void SetDoorActive(bool enable) {
+        disabledDoor.SetActive(!enable);
+        enabledDoor.SetActive(enable);
     }
 }

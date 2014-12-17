@@ -185,6 +185,7 @@ public class NetworkManager : MonoBehaviour {
 
     [RPC]
     public void StartGame() {
+        if (Network.isServer)
         networkView.RPC("_StartGame", RPCMode.AllBuffered);
     }
 
