@@ -1,17 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// Should be placed on a disabled wall
 public class Wall : MonoBehaviour {
-    public GameObject[] pieces;
+    public GameObject disabledWall;
+    public GameObject enabledWall;
+    public GameObject a;
 
-    public void SetActive(bool enable) {
-        gameObject.SetActive(!enable);
-
-        if (enable) {
-            foreach (GameObject piece in pieces) {
-                piece.SetActive(true);
-            }
-        }
+    public void SetWallActive(bool enable) {
+        disabledWall.SetActive(!enable);
+        enabledWall.SetActive(enable);
     }
 }

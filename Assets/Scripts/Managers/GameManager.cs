@@ -8,15 +8,10 @@ public class GameManager : MonoBehaviour {
     public string uniqueGameType = "breach_day";
 
     public Mode mode;
-    public WorldSettings worldSettings = new WorldSettings("Map_1", true, 10, 10);
+    public WorldSettings worldSettings = new WorldSettings("Map_1", true, 0, 10);
 
 	void Awake () {
         instance = this;
         DontDestroyOnLoad(gameObject);
 	}
-
-    [RPC]
-    public void GetName() {
-        NetworkManager.instance.UpdateMyInfo(PlayerInfo.NAME, name);
-    }
 }

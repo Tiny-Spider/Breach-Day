@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class World : MonoBehaviour {
     public static World instance { private set; get; }
 
-    public List<Door> doors;
-    public List<Wall> walls;
+    private List<Door> doors;
+    private List<Wall> walls;
 
     public Transform playerHolder;
 
@@ -19,6 +19,9 @@ public class World : MonoBehaviour {
     }
 
     private void loadEnvironment(WorldSettings worldSettings) {
+        doors = new List<Door>(GameObject.FindObjectsOfType<Door>());
+        walls = new List<Wall>(GameObject.FindObjectsOfType<Wall>());
+
         // Clamp just to make sure you don't go over max
         int doorAmount = Mathf.Clamp(worldSettings.doors, 0, doors.Count);
         int wallAmount = Mathf.Clamp(worldSettings.walls, 0, walls.Count);
@@ -27,11 +30,11 @@ public class World : MonoBehaviour {
         walls.Shuffle();
 
         for (int i = 0; i < doors.Count; i++) {
-            doors[i].SetActive(i < doorAmount);
+            doors[i].SetDoorActive(i < doorAmount);
         }
 
         for (int i = 0; i < walls.Count; i++) {
-            walls[i].SetActive(i < wallAmount);
+            walls[i].SetWallActive(i < wallAmount);
         }
     }
 }
