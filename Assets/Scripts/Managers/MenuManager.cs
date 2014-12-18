@@ -180,21 +180,44 @@ public class MenuManager : MonoBehaviour {
 
     public void StartServer() {
         //Attepts to start a server with the given settings. Also handles any error feedback back into the GUI.
-        ServerConnectionFeedback(createServerFeedback, "Connecting..", Color.black);
-        NetworkConnectionError networkError = Network.InitializeServer(int.Parse(serverMaxPlayers.text), int.Parse(serverPort.text), serverUseNAT.isOn);
-        Network.incomingPassword = serverPassword.text;
-        MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text, serverDescription.text);
+        string errorMessage = "";
+        int tempMaxPlayers;
+        int tempPort;
 
-        string error = GetNetworkError(networkError);
-        if (error.Equals(retryError))
+        if (serverName.text.Equals(""))
         {
-            Network.Disconnect();
-            StartServer();
+            errorMessage += "Enter a server name\n";
         }
-        else
+        if (!int.TryParse(serverMaxPlayers.text,out tempMaxPlayers))
         {
-            ServerConnectionFeedback(createServerFeedback, error, Color.red);
+            errorMessage += "Enter amount of maximum players\n";
         }
+        if (!int.TryParse(serverPort.text, out tempPort))
+        {
+            errorMessage += "Enter port number\n";
+        }
+
+        ServerConnectionFeedback(createServerFeedback,errorMessage, Color.red);
+
+        if (errorMessage.Equals(""))
+        {
+            ServerConnectionFeedback(createServerFeedback, "Creating..", Color.black);
+            NetworkConnectionError networkError = Network.InitializeServer(tempMaxPlayers, tempPort, serverUseNAT.isOn);
+            Network.incomingPassword = serverPassword.text;
+            MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text, serverDescription.text);
+
+            string error = GetNetworkError(networkError);
+            if (error.Equals(retryError))
+            {
+                Network.Disconnect();
+                StartServer();
+            }
+            else
+            {
+                ServerConnectionFeedback(createServerFeedback, error, Color.red);
+            }
+        }
+ 
     }
 
 
@@ -208,6 +231,8 @@ public class MenuManager : MonoBehaviour {
     }
 
     void ServerConnectionFeedback(Text infobox, string message, Color color) {
+        if (message.Equals("Connecting.."))
+        color = Color.black;
         infobox.text = message;
         infobox.color = color;
     }
