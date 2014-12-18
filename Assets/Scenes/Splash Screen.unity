@@ -245,8 +245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c6a7164ed223a4da9d7e5aa5372249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamA: {fileID: 11400016, guid: 25e3ab2d6992a48f3ab7455baed062e0, type: 2}
-  teamB: {fileID: 11400016, guid: 25e3ab2d6992a48f3ab7455baed062e0, type: 2}
+  teamA: {fileID: 11400020, guid: de25e3e4b99ea8f4b967dff82b2882e6, type: 2}
+  teamB: {fileID: 11400020, guid: de25e3e4b99ea8f4b967dff82b2882e6, type: 2}
 --- !u!114 &100285508
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(NetworkView))]
 public class PlayerNetwork : MonoBehaviour {
     public Component[] clientComponents;
+    public GameObject[] clientGameobjects;
 
     public NetworkPlayer owner;
     public float lerpSpeed = 0.2F;
@@ -48,6 +49,10 @@ public class PlayerNetwork : MonoBehaviour {
 
             foreach(Component component in clientComponents) {
                ((Behaviour) component).enabled = false;
+            }
+
+            foreach (GameObject gameObject in clientGameobjects) {
+                gameObject.SetActive(false);
             }
         }
         else {
