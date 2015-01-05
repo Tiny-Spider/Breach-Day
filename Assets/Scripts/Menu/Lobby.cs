@@ -12,20 +12,20 @@ public class Lobby : MonoBehaviour {
 
 	void Start () {
         NetworkManager.instance.OnJoin += PlayerJoin;
-        NetworkManager.instance.UpdateMyInfo(PlayerInfo.TEAM, "1");
+        NetworkManager.instance.UpdateMyself(PlayerInfo.TEAM, "1");
 	}
 
     void PlayerJoin(NetworkPlayer networkPlayer) {
         // Not really required, since OnJoin is only called on a server
         // But it's always good to be safe
         if (Network.isServer) {
-            NetworkManager.instance.UpdateInfo(networkPlayer, PlayerInfo.TEAM, "1");
+            NetworkManager.instance.UpdatePlayer(networkPlayer, PlayerInfo.TEAM, "1");
         }
     }
 
     public void StartGame() {
         // Start the game trough NetworkManager, so everyone get's the update
-        NetworkManager.instance.StartGame();
+        GameManager.instance.StartGame();
     }
 
     public void LoadMainMenu() {

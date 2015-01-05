@@ -13,4 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Map
   levelDescription: A testing world
-  technicalLevelName: Map_1
+  maxPlayers: 0
+  avalibleGamemodes: []
+  maxDoorAmount: 0
+  maxWallAmount: 0
+  sceneName: Map_1

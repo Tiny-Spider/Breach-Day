@@ -19,20 +19,22 @@ public class PlayerNetwork : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (owner != null && owner == Network.player) {
-            if (Network.isClient) {
-                networkView.RPC("UpdatePosition", RPCMode.Server, transform.position, transform.rotation);
+        if (owner != null) {
+            if (owner == Network.player) {
+                if (Network.isClient) {
+                    networkView.RPC("UpdatePosition", RPCMode.Server, transform.position, transform.rotation);
+                }
+                else {
+                    realPosition = transform.position;
+                    realRotation = transform.rotation;
+                }
             }
-            //else {
-            //    realPosition = transform.position;
-            //    realRotation = transform.rotation;
-            //}
-        }
 
-        // Don't update myself!
-        else {
-            transform.position = Vector3.Lerp(transform.position, realPosition, lerpSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, realRotation, lerpSpeed);
+            // Don't update myself!
+            else {
+                transform.position = Vector3.Lerp(transform.position, realPosition, lerpSpeed);
+                transform.rotation = Quaternion.Lerp(transform.rotation, realRotation, lerpSpeed);
+            }
         }
     }
 

@@ -10,21 +10,23 @@ public class World : MonoBehaviour {
 
     public Transform playerHolder;
 
-    public Dictionary<NetworkPlayer, Player> players = new Dictionary<NetworkPlayer, Player>();
-
-    void Start() {
-        WorldSettings worldSettings = GameManager.instance.worldSettings;
-
-        loadEnvironment(worldSettings);
+    void Awake() {
+        instance = this;
     }
 
-    private void loadEnvironment(WorldSettings worldSettings) {
+    void Start() {
+        loadEnvironment();
+    }
+
+    private void loadEnvironment() {
+        GameManager gameManager = GameManager.instance;
+
         doors = new List<Door>(GameObject.FindObjectsOfType<Door>());
         walls = new List<Wall>(GameObject.FindObjectsOfType<Wall>());
 
         // Clamp just to make sure you don't go over max
-        int doorAmount = Mathf.Clamp(worldSettings.doors, 0, doors.Count);
-        int wallAmount = Mathf.Clamp(worldSettings.walls, 0, walls.Count);
+        int doorAmount = Mathf.Clamp(gameManager.levelDoors, 0, doors.Count);
+        int wallAmount = Mathf.Clamp(gameManager.levelWalls, 0, walls.Count);
 
         doors.Shuffle();
         walls.Shuffle();
