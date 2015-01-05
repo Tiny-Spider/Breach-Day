@@ -15,6 +15,9 @@ public class NetworkManager : MonoBehaviour {
     public delegate void OnPlayerDisconnect(NetworkPlayer player);
     public event OnPlayerDisconnect OnDisconnect = delegate { };
 
+    public delegate void OnPlayerUpdate(NetworkPlayer player, string setting, string value, bool set);
+    public event OnPlayerUpdate OnUpdate = delegate { };
+
     public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
 
     public string menuScene;
@@ -69,13 +72,12 @@ public class NetworkManager : MonoBehaviour {
 
     #endregion
 
-
     [RPC]
     public void AddPlayer(NetworkPlayer player) {
         connectedPlayers.Add(player, new PlayerInfo());
         Debug.Log("Added new player \"" + player.ToString() + "\"");
         
-        // Senpai server noticed me, let's send him our name
+        // Server senpai noticed me, let's send him our name
         if (player.Equals(Network.player)) {
             Debug.Log("Added myself! Updating my name: " + Network.player.ToString() + " | " + player.ToString());
             StartCoroutine(SendInfo());
@@ -101,6 +103,7 @@ public class NetworkManager : MonoBehaviour {
     // Can only be called over RPC due to networkmessageinfo parameter
     [RPC]
     public void UpdatePlayer(NetworkPlayer player, string setting, string value, bool set, NetworkMessageInfo info) {
+        OnUpdate(player, setting, value, set);
         //Debug.Log("UpdatePlayer");
 
         // Sender is server, server may always update
@@ -170,6 +173,7 @@ public class NetworkManager : MonoBehaviour {
         Debug.Log("Connected Players: " + connected);
     }
 
+
     public void UpdateInfo(NetworkPlayer player, string setting, string value) {
         networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, player, setting, value, Network.isServer);
     }
@@ -193,4 +197,6 @@ public class NetworkManager : MonoBehaviour {
     public void _StartGame() {
         Application.LoadLevel("Map_1");
     }
+
+
 }

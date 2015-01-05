@@ -6,6 +6,7 @@ public class PlayerInfo {
     public const string TEAM = "team";
     public const string PING = "ping";
 
+    public PlayerEntry playerEntry;
 
     public string name { private set; get; }
     public int team { private set; get; }

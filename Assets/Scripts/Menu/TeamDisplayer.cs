@@ -6,7 +6,6 @@ public class TeamDisplayer : MonoBehaviour {
     public GameObject playerEntry;
     public GameObject team1;
     public GameObject team2;
-    Dictionary<NetworkPlayer, GameObject> connectedPlayers = new Dictionary<NetworkPlayer, GameObject>();
 
 	// Use this for initialization
 	void Start () {
@@ -21,7 +20,6 @@ public class TeamDisplayer : MonoBehaviour {
     void OnPlayerJoin(NetworkPlayer networkPlayer) {
         GameObject go = (GameObject)GameObject.Instantiate(playerEntry);
         go.transform.parent = GetTeamAutoJoin().transform;
-        connectedPlayers.Add(networkPlayer, go);
 
     }
 
