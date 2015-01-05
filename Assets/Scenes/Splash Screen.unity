@@ -180,8 +180,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae696f68acff1544853b217a612942a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  splashScene: Splash Screen
+  menuScene: Menu
+  lobbyScene: Lobby
   name: Player
   uniqueGameType: breach_day
+  gamemode: 
+  levelName: Map
+  levelTime: 0
+  levelDoors: 0
+  levelWalls: 0
 --- !u!114 &100285503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,8 +214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6efaa6177661c77498a6d82b4c472d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuScene: Menu
-  lobbyScene: Lobby
 --- !u!148 &100285505
 NetworkView:
   m_ObjectHideFlags: 0
@@ -245,8 +251,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c6a7164ed223a4da9d7e5aa5372249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamA: {fileID: 11400016, guid: 25e3ab2d6992a48f3ab7455baed062e0, type: 2}
-  teamB: {fileID: 11400016, guid: 25e3ab2d6992a48f3ab7455baed062e0, type: 2}
+  teamA: {fileID: 11400020, guid: de25e3e4b99ea8f4b967dff82b2882e6, type: 2}
+  teamB: {fileID: 11400020, guid: de25e3e4b99ea8f4b967dff82b2882e6, type: 2}
+  teamFFA: {fileID: 11400020, guid: de25e3e4b99ea8f4b967dff82b2882e6, type: 2}
 --- !u!114 &100285508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,10 +314,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: Menu
   title: {fileID: 1764550805}
-  titleTime: 0
+  titleTime: 2
   subtitle: {fileID: 1207332272}
-  subtitleTime: 0
-  splashTime: 0
+  subtitleTime: 1
+  splashTime: 1
 --- !u!4 &673068063
 Transform:
   m_ObjectHideFlags: 0

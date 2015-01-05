@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour {
     // Player must be grounded for at least this many physics frames before being able to jump again; set to 0 to allow bunny hopping
     public int antiBunnyHopFactor = 1;
 
+    public float pushPower = 0.3F;
+
     private Vector3 moveDirection = Vector3.zero;
     private bool grounded = false;
     private CharacterController controller;
@@ -142,6 +144,26 @@ public class PlayerController : MonoBehaviour {
     // Store point that we're in contact with for use in FixedUpdate if needed
     void OnControllerColliderHit(ControllerColliderHit hit) {
         contactPoint = hit.point;
+
+	    Rigidbody body = hit.collider.attachedRigidbody;
+	    // no rigidbody
+	    if (body == null || body.isKinematic)
+		    return;
+		
+	    // Where do we hit the collider?
+	    // We never want to push objects that are below us
+	    // never below
+	    float relative = transform.InverseTransformPoint(hit.point).y;
+        if (relative < -controller.height / 2 + controller.radius)
+		    return;
+
+	    // Calculate push direction from move direction (Only push on x-z plane)
+	    // And dont do anything if we are not moving fast
+	    Vector3 pushDir = new Vector3(moveDirection.x, 0, moveDirection.z);
+	    if (pushDir.sqrMagnitude < speed * speed * 0.01)
+		    return;
+
+	    body.velocity = pushDir * pushPower;
     }
 
     // If falling damage occured, this is the place to do something about it. You can make the player

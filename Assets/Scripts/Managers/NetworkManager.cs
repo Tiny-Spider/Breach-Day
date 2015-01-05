@@ -15,16 +15,20 @@ public class NetworkManager : MonoBehaviour {
     public delegate void OnPlayerDisconnect(NetworkPlayer player);
     public event OnPlayerDisconnect OnDisconnect = delegate { };
 
-    public delegate void OnPlayerUpdate(NetworkPlayer player, string setting, string value, bool set);
+    public delegate void OnPlayerUpdate(NetworkPlayer player, string setting, string value);
     public event OnPlayerUpdate OnUpdate = delegate { };
 
     public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
 
-    public string menuScene;
-    public string lobbyScene;
+    public float pingUpdateSpeed = 0.5F;
 
     void Awake() {
         instance = this;
+    }
+
+    void Start() {
+        if (Network.isServer)
+            StartCoroutine(PingTask());
     }
 
     public PlayerInfo GetMyInfo() {
@@ -35,12 +39,12 @@ public class NetworkManager : MonoBehaviour {
 
     // Whenever you connect, server or client we should load the lobby.
     void OnConnectedToServer() {
-        Application.LoadLevel(lobbyScene);
+        Application.LoadLevel(GameManager.instance.lobbyScene);
     }
 
     void OnServerInitialized() {
-        Application.LoadLevel(lobbyScene);
-        networkView.RPC("AddPlayer", RPCMode.AllBuffered, Network.player);
+        Application.LoadLevel(GameManager.instance.lobbyScene);
+        networkView.RPC("_AddPlayer", RPCMode.AllBuffered, Network.player);
     }
 
     #endregion
@@ -52,7 +56,7 @@ public class NetworkManager : MonoBehaviour {
     // and close all connections to prevent dead connections, and load the menu
     void OnDisconnectedFromServer(NetworkDisconnection info) {
         Debug.Log("Disconnected: " + info.ToString());
-        Application.LoadLevel(menuScene);
+        Application.LoadLevel(GameManager.instance.menuScene);
         connectedPlayers.Clear();
     }
 
@@ -63,49 +67,53 @@ public class NetworkManager : MonoBehaviour {
 
     // Only called on a server, send RPC's to change the player amount on all clients
     void OnPlayerConnected(NetworkPlayer player) {
-        networkView.RPC("AddPlayer", RPCMode.AllBuffered, player);
+        networkView.RPC("_AddPlayer", RPCMode.AllBuffered, player);
     }
 
     void OnPlayerDisconnected(NetworkPlayer player) {
-        networkView.RPC("RemovePlayer", RPCMode.AllBuffered, player);
+        networkView.RPC("_RemovePlayer", RPCMode.AllBuffered, player);
     }
 
     #endregion
 
+
     [RPC]
-    public void AddPlayer(NetworkPlayer player) {
+    private void _AddPlayer(NetworkPlayer player) {
         connectedPlayers.Add(player, new PlayerInfo());
         Debug.Log("Added new player \"" + player.ToString() + "\"");
         
-        // Server senpai noticed me, let's send him our name
+        // Senpai server noticed me, let's send him our name
         if (player.Equals(Network.player)) {
-            Debug.Log("Added myself! Updating my name: " + Network.player.ToString() + " | " + player.ToString());
+            Debug.Log("Added myself, Updating my info! (" + Network.player.ToString() + " | " + player.ToString() + ")");
             StartCoroutine(SendInfo());
         }
 
         OnJoin(player);
     }
 
+    // This has to be delayed, blame Unity
     IEnumerator SendInfo() {
-        yield return new WaitForSeconds(0.1F);
-        UpdateMyInfo(PlayerInfo.NAME, GameManager.instance.name);
+        yield return new WaitForEndOfFrame();
+        UpdateMyself(PlayerInfo.NAME, GameManager.instance.name);
     }
 
     [RPC]
-    public void RemovePlayer(NetworkPlayer player) {
-        Network.RemoveRPCs(player);
-        Network.DestroyPlayerObjects(player);
-
+    private void _RemovePlayer(NetworkPlayer player) {
         OnDisconnect(player);
+
+        if (Network.isServer) {
+            Player playerObject = connectedPlayers[player].playerObject;
+
+            if (playerObject)
+                Network.Destroy(playerObject.gameObject);
+        }
+
+        Network.RemoveRPCs(player);
         connectedPlayers.Remove(player);
     }
 
-    // Can only be called over RPC due to networkmessageinfo parameter
     [RPC]
-    public void UpdatePlayer(NetworkPlayer player, string setting, string value, bool set, NetworkMessageInfo info) {
-        OnUpdate(player, setting, value, set);
-        //Debug.Log("UpdatePlayer");
-
+    private void _UpdatePlayer(NetworkPlayer player, string setting, string value, bool set, NetworkMessageInfo info) {
         // Sender is server, server may always update
         if (set) {
             Debug.Log("Update from server: " + info.sender.ToString() + " | " + player.ToString() + " | " + setting + " | " + value);
@@ -120,6 +128,8 @@ public class NetworkManager : MonoBehaviour {
                 Debug.Log("Player \"" + player.ToString() + "\" not found!");
             }
 
+            OnUpdate(player, setting, value);
+
         } else {
             // Recived an update from client, do some checks before sending it to others
             if (Network.isServer) {
@@ -128,75 +138,74 @@ public class NetworkManager : MonoBehaviour {
                 switch (setting) {
                     case PlayerInfo.NAME:
                         // Check for invalid name, for example swearing
-                        /*
                         if (value.Contains("fuck")) {
-                            networkView.RPC("ServerNotification", player, "Your name is inappropiate, you have been kicked!");
+                            ServerNotification(player, "Your name is inappropiate, you have been kicked!");
                             Network.CloseConnection(player, true);
                             return;
                         }
 
-                        HashSet<string> names = new HashSet<string>();
-                        foreach (PlayerInfo playerInfo in connectedPlayers.Values) {
-                            names.Add(playerInfo.name.ToLower());
-                        }
-
-                        if (names.Contains(value.ToLower())) {
-                            networkView.RPC("ServerNotification", player, "Your name is already used! Please connect using a different name.");
+                        if (connectedPlayers.Values.ContainsName(name)) {
+                            ServerNotification(player, "Your name is already used! Please connect using a different name.");
                             Network.CloseConnection(player, true);
                             return;
                         }
-                        */
 
                         // All is good, send the others information
-                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value, true);
+                        UpdatePlayer(player, setting, value);
 
                         break;
                     case PlayerInfo.TEAM:
 
                         // All is good, send the others information
-                        networkView.RPC("UpdatePlayer", RPCMode.AllBuffered, player, setting, value, true);
+                        UpdatePlayer(player, setting, value);
+
+                        break;
+                    case PlayerInfo.LOADED:
+
+                        // All is good, send the others information
+                        UpdatePlayer(player, setting, value);
 
                         break;
                     default:
-                        networkView.RPC("ServerNotification", player, "Invalid data send! This can be caused by outdated server/client, please update your game!");
+                        ServerNotification(player, "Invalid data send! This can be caused by outdated server/client, please update your game!");
                         Network.CloseConnection(player, true);
                         break;
                 }
             }
         }
-
-        string connected = "";
-        foreach (PlayerInfo a in connectedPlayers.Values) {
-            connected += "(" + a.name + ") ";
-        }
-
-        Debug.Log("Connected Players: " + connected);
     }
 
-
-    public void UpdateInfo(NetworkPlayer player, string setting, string value) {
-        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, player, setting, value, Network.isServer);
+    public void UpdatePlayer(NetworkPlayer player, string setting, string value) {
+        networkView.RPC("_UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, player, setting, value, Network.isServer);
     }
 
-    public void UpdateMyInfo(string setting, string value) {
-        networkView.RPC("UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, Network.player, setting, value, Network.isServer);
+    public void UpdateMyself(string setting, string value) {
+        networkView.RPC("_UpdatePlayer", Network.isServer ? RPCMode.AllBuffered : RPCMode.Server, Network.player, setting, value, Network.isServer);
     }
 
     [RPC]
-    public void ServerNotification(string message) {
+    private void _ServerNotification(string message) {
         OnNote(message);
     }
 
-    [RPC]
-    public void StartGame() {
-        if (Network.isServer)
-        networkView.RPC("_StartGame", RPCMode.AllBuffered);
+    public void ServerNotification(NetworkPlayer player, string message) {
+        networkView.RPC("_ServerNotification", player, message);
     }
 
-    [RPC]
-    public void _StartGame() {
-        Application.LoadLevel("Map_1");
+    
+
+    IEnumerator PingTask() {
+        while (true) {
+            Debug.Log("ping");
+            if (GameManager.instance.inGame) {
+                Debug.Log("ingame");
+                foreach (NetworkPlayer connection in Network.connections) {
+                    Debug.Log("ping: " + connection.ToString());
+                    UpdatePlayer(connection, PlayerInfo.PING, Network.GetLastPing(connection).ToString());
+                }
+            }
+
+            yield return new WaitForSeconds(pingUpdateSpeed);
+        }
     }
-
-
 }

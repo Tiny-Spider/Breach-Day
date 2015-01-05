@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Mode {
+public abstract class Mode : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
