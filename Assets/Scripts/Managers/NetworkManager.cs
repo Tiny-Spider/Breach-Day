@@ -55,7 +55,6 @@ public class NetworkManager : MonoBehaviour {
     // Works for client and server, whenever you disconnect we should clear connected players
     // and close all connections to prevent dead connections, and load the menu
     void OnDisconnectedFromServer(NetworkDisconnection info) {
-        Debug.Log("Disconnected: " + info.ToString());
         Application.LoadLevel(GameManager.instance.menuScene);
         connectedPlayers.Clear();
     }
@@ -67,10 +66,12 @@ public class NetworkManager : MonoBehaviour {
 
     // Only called on a server, send RPC's to change the player amount on all clients
     void OnPlayerConnected(NetworkPlayer player) {
+        Debug.Log("New Player Connected: " + player.ToString());
         networkView.RPC("_AddPlayer", RPCMode.AllBuffered, player);
     }
 
     void OnPlayerDisconnected(NetworkPlayer player) {
+        Debug.Log("Player Disconnected: " + player.ToString());
         networkView.RPC("_RemovePlayer", RPCMode.AllBuffered, player);
     }
 
