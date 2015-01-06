@@ -50,6 +50,8 @@ public class TeamDisplayer : MonoBehaviour {
                     // Spectator
                     break;
             }
+
+            playerEntry.SetName(playerInfo.name);
         }
     }
 }
