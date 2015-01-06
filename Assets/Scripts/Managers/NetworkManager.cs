@@ -15,7 +15,7 @@ public class NetworkManager : MonoBehaviour {
     public delegate void OnPlayerDisconnect(NetworkPlayer player);
     public event OnPlayerDisconnect OnDisconnect = delegate { };
 
-    public delegate void OnPlayerUpdate(NetworkPlayer player, string setting, string value);
+    public delegate void OnPlayerUpdate(NetworkPlayer player, PlayerInfo playerInfo, string setting);
     public event OnPlayerUpdate OnUpdate = delegate { };
 
     public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
@@ -128,7 +128,7 @@ public class NetworkManager : MonoBehaviour {
                 Debug.Log("Player \"" + player.ToString() + "\" not found!");
             }
 
-            OnUpdate(player, setting, value);
+            OnUpdate(player, playerInfo, setting);
 
         } else {
             // Recived an update from client, do some checks before sending it to others
