@@ -843,10 +843,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a19029dc626a84245940bfaf5da3dd7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerEntry: {fileID: 0}
-  teamA: {fileID: 0}
-  teamB: {fileID: 0}
-  teamFFA: {fileID: 0}
+  playerEntry: {fileID: 11400002, guid: 10bc8baaba8505f49b7d9bed2dd91ed0, type: 2}
+  teamA: {fileID: 2063184941}
+  teamB: {fileID: 1827990669}
+  teamFFA: {fileID: 1927783908}
 --- !u!1 &1115768314
 GameObject:
   m_ObjectHideFlags: 0
@@ -1770,7 +1770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1927783907
 RectTransform:
   m_ObjectHideFlags: 0
