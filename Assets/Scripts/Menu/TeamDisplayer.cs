@@ -1,47 +1,55 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class TeamDisplayer : MonoBehaviour {
-    public GameObject playerEntry;
-    public GameObject team1;
-    public GameObject team2;
+    public PlayerEntry playerEntry;
+    public VerticalLayoutGroup teamA;
+    public VerticalLayoutGroup teamB;
+    public VerticalLayoutGroup teamFFA;
 
-	// Use this for initialization
+    private Dictionary<NetworkPlayer, PlayerEntry> connectedPlayers = new Dictionary<NetworkPlayer, PlayerEntry>();
+
 	void Start () {
-	    NetworkManager.instance.OnJoin += OnPlayerJoin;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+        NetworkManager.instance.OnUpdate += OnPlayerUpdate;
+        NetworkManager.instance.OnDisconnect += OnPlayerDisconnect;
 	}
 
-    void OnPlayerJoin(NetworkPlayer networkPlayer) {
-        GameObject go = (GameObject)GameObject.Instantiate(playerEntry);
-        go.transform.parent = GetTeamAutoJoin().transform;
-
+    void OnDestroy() {
+        NetworkManager.instance.OnUpdate -= OnPlayerUpdate;
+        NetworkManager.instance.OnDisconnect -= OnPlayerDisconnect;
     }
 
-    GameObject GetTeamAutoJoin(){
-        int team1Count = 0;
-        int team2Count = 0;
-        foreach (GameObject playerEntry in team1.transform)
-        {
-            team1Count++;
-        }
-        foreach(GameObject playerEntry in team2.transform){
-            team2Count++;
-        }
+    void OnPlayerDisconnect(NetworkPlayer player) {
+        Destroy(connectedPlayers[player]);
+    }
 
-        if (team1Count >= team2Count)
-        {
-            return team1;
-        }
-        else
-        {
-            return team2;
-        }
+    void OnPlayerUpdate(NetworkPlayer player, PlayerInfo playerInfo, string setting) {
+        if (setting.EqualsIgnoreCase(PlayerInfo.TEAM)) {
+            PlayerEntry playerEntry;
 
+            if (connectedPlayers.ContainsKey(player)) {
+                playerEntry = connectedPlayers[player];
+            }
+            else {
+                playerEntry = Instantiate(this.playerEntry) as PlayerEntry;
+            }
+
+            switch (playerInfo.team) {
+                case 0:
+                    playerEntry.transform.parent = teamFFA.transform;
+                    break;
+                case 1:
+                    playerEntry.transform.parent = teamA.transform;
+                    break;
+                case 2:
+                    playerEntry.transform.parent = teamB.transform;
+                    break;
+                default:
+                    // Spectator
+                    break;
+            }
+        }
     }
 }

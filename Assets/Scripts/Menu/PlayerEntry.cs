@@ -3,13 +3,9 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerEntry : MonoBehaviour {
+    public Text name;
 
-   public PlayerInfo playerInfo;
-   public Text name;
-
-
-   void Start() {
-       playerInfo = NetworkManager.instance.connectedPlayers[Network.player];
-       name.text = playerInfo.name;
-   }
+    public void SetName(string name) {
+        this.name.text = name;
+    }
 }

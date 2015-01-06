@@ -39,4 +39,6 @@ public class Lobby : MonoBehaviour {
     public void ClosePopupPanel(GameObject panel) {
         panel.SetActive(false);
     }
+
+    
 }
