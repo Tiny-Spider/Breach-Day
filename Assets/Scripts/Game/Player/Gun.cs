@@ -6,19 +6,22 @@ public class Gun : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            
+
             RaycastHit raycastHit;
 
             Debug.DrawRay(transform.position, transform.forward * 100, Color.red, 5);
 
-            if (Physics.Raycast(transform.position, transform.forward, out raycastHit, 100)) {
-                if (raycastHit.collider) {
+            if (Physics.Raycast(transform.position, transform.forward, out raycastHit, 100))
+            {
+                if (raycastHit.collider)
+                {
                     if (raycastHit.transform.CompareTag(TagManager.wallPartTag))
                         raycastHit.rigidbody.isKinematic = false;
                 }
             }
 
-            if (raycastHit.rigidbody) {
+            if (raycastHit.rigidbody)
+            {
                 raycastHit.rigidbody.AddForceAtPosition(transform.forward * force, raycastHit.point, ForceMode.Impulse);
             }
             

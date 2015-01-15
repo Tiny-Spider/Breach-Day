@@ -4,9 +4,12 @@ using System.Collections;
 
 public class PlayerHUD : MonoBehaviour {
     public Text pingText;
+    public Text clipAmountText;
+    public Text ammoAmount;
 
 	void Start() {
         NetworkManager.instance.OnUpdate += OnUpdate;
+        NetworkManager.instance.connectedPlayers[networkView.owner].playerObject.playerHUD = this;
 	}
 
     void OnDestroy() {

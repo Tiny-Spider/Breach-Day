@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour {
@@ -54,6 +55,11 @@ public class PlayerController : MonoBehaviour {
     private bool playerControl = false;
     private int jumpTimer;
 
+    private Player player;
+    public List<SlotType> inventory = new List<SlotType>();
+
+    bool lastActionKeyPress;
+
     void Start() {
         controller = GetComponent<CharacterController>();
         myTransform = transform;
@@ -61,6 +67,7 @@ public class PlayerController : MonoBehaviour {
         rayDistance = controller.height * .5f + controller.radius;
         slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
+        player = GetComponent<Player>();
     }
 
     void FixedUpdate() {
@@ -139,6 +146,63 @@ public class PlayerController : MonoBehaviour {
 
         // Move the controller, and set grounded true or false depending on whether we're standing on something
         grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
+    }
+
+    void Update() {
+        if (Input.GetAxis("Fire") > 0)
+        {
+            player.Fire();
+        }
+        else
+        {
+            player.fireRelease = true;
+        }
+
+        if (Input.GetButtonDown("Inventory1"))
+        {
+            player.ChangeSelectedSlot(inventory[0]);
+            lastActionKeyPress = true;
+        }
+
+        if (Input.GetButtonDown("Inventory2"))
+        {
+            player.ChangeSelectedSlot(inventory[1]);
+            lastActionKeyPress = true;
+        }
+
+        if (Input.GetButtonDown("Inventory3"))
+        {
+            player.ChangeSelectedSlot(inventory[2]);
+            lastActionKeyPress = true;
+        }
+
+        if (Input.GetButtonDown("Inventory4"))
+        {
+            player.ChangeSelectedSlot(inventory[3]);
+            lastActionKeyPress = true;
+        }
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            player.ChangeSelectedSlot(inventory[FindSlotInList()+1]);
+            print("Inventory["+FindSlotInList()+"]");
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            player.ChangeSelectedSlot(inventory[FindSlotInList()-1]);
+            print("Inventory[" + FindSlotInList() + "]");
+        }
+    }
+
+    int FindSlotInList() {
+        foreach (SlotType slotType in inventory)
+        {
+            if (player.selectedSlot.Equals(slotType))
+            {
+                return inventory.IndexOf(slotType)+1;
+            }
+        }
+        return 0;
     }
 
     // Store point that we're in contact with for use in FixedUpdate if needed
