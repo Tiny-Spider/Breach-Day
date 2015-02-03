@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Equipment : InventoryItem
-{
-
-    public float pullOutTime;
+public class GunManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

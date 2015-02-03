@@ -9,7 +9,7 @@ public class PlayerHUD : MonoBehaviour {
 
 	void Start() {
         NetworkManager.instance.OnUpdate += OnUpdate;
-        NetworkManager.instance.connectedPlayers[networkView.owner].playerObject.playerHUD = this;
+        NetworkManager.instance.GetMyInfo().playerObject.playerHUD = this;
 	}
 
     void OnDestroy() {

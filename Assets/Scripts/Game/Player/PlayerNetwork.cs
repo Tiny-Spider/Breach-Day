@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(NetworkView))]
 public class PlayerNetwork : MonoBehaviour {
@@ -11,12 +12,14 @@ public class PlayerNetwork : MonoBehaviour {
     public float lerpSpeed = 0.2F;
     public float maxMoveDistance = 1.0F;
 
-    public Vector3 realPosition;
-    public Quaternion realRotation;
-    public Quaternion realHeadRotation;
+    Vector3 realPosition;
+    Quaternion realRotation;
+    Quaternion realHeadRotation;
 
     public LayerMask rayLayerMask;
     public LayerMask playerLayer;
+
+    public Dictionary<int, InventoryItem> weaponListID = new Dictionary<int, InventoryItem>();
 
     void Start() {
         realPosition = transform.position;
@@ -96,15 +99,15 @@ public class PlayerNetwork : MonoBehaviour {
         head.rotation = realHeadRotation;
     }
 
-    public void Shoot(NetworkPlayer networkPlayer, float damage) {
+    public void Shoot(NetworkPlayer networkPlayer, int weaponID) {
         print("Shoot");
-        networkView.RPC("_Shoot", RPCMode.All,networkPlayer,damage);
+        networkView.RPC("_Shoot", RPCMode.All,networkPlayer,weaponID);
     }
 
     [RPC]
-    void _Shoot(NetworkPlayer networkPlayer, float damage) {
-        print("Rpc Shoot");
-
+    void _Shoot(NetworkPlayer networkPlayer, int weaponID) {
+        print("Shooting with ID " + weaponID);
+        print("Shot with : " + weaponListID[weaponID].name);
         Debug.DrawLine(head.position, head.forward * 100, Color.green, 10f);
 
         RaycastHit hit;

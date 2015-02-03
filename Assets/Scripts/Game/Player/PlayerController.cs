@@ -160,37 +160,64 @@ public class PlayerController : MonoBehaviour {
 
         if (Input.GetButtonDown("Inventory1"))
         {
-            player.ChangeSelectedSlot(inventory[0]);
+            if (inventory[0] != null)
+            {
+               player.ChangeSelectedSlot(inventory[0]);
+            }
+
             lastActionKeyPress = true;
         }
 
         if (Input.GetButtonDown("Inventory2"))
         {
-            player.ChangeSelectedSlot(inventory[1]);
+            if (inventory[1] != null)
+            {
+                player.ChangeSelectedSlot(inventory[1]);
+            }
             lastActionKeyPress = true;
         }
 
         if (Input.GetButtonDown("Inventory3"))
         {
-            player.ChangeSelectedSlot(inventory[2]);
+            if (inventory[2] != null)
+            {
+                player.ChangeSelectedSlot(inventory[2]);
+            }
             lastActionKeyPress = true;
         }
 
         if (Input.GetButtonDown("Inventory4"))
         {
-            player.ChangeSelectedSlot(inventory[3]);
+            if (inventory[3] != null)
+            {
+                player.ChangeSelectedSlot(inventory[3]);
+            }
             lastActionKeyPress = true;
         }
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            player.ChangeSelectedSlot(inventory[FindSlotInList()+1]);
-            print("Inventory["+FindSlotInList()+"]");
+            if (FindSlotInList().Equals(0))
+                player.ChangeSelectedSlot(inventory[inventory.Count -1]);
+            else
+            player.ChangeSelectedSlot(inventory[FindSlotInList()-1]);
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
-            player.ChangeSelectedSlot(inventory[FindSlotInList()-1]);
-            print("Inventory[" + FindSlotInList() + "]");
+            if (FindSlotInList().Equals(inventory.Count - 1))
+                player.ChangeSelectedSlot(inventory[0]);
+            else
+            player.ChangeSelectedSlot(inventory[FindSlotInList()+1]);
+        }
+
+        if (Input.GetAxis("Reload") > 0)
+        {
+            //StartCoroutine(player.Reload());
+        }
+
+        if (Input.GetAxis("Drop Item") > 0)
+        {
+            player.DropItem();
         }
     }
 
@@ -199,7 +226,7 @@ public class PlayerController : MonoBehaviour {
         {
             if (player.selectedSlot.Equals(slotType))
             {
-                return inventory.IndexOf(slotType)+1;
+                return inventory.IndexOf(slotType);
             }
         }
         return 0;

@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Weapon : MonoBehaviour {
+public class Weapon : InventoryItem
+{
     public bool automatic;
     public float damage;
     public int currentClip;
@@ -10,18 +12,13 @@ public class Weapon : MonoBehaviour {
     public int maxAmmo;
     public float reloadTime;
     public float fireRate;
+    public float pullOutTime;
     public float bulletForce;
     public AmmoType ammoType;
 
-    
-    public float nextFireTime = 1000;
-    
-    public float CalculateNextFireTime(float fireRate) {
-        return Time.time + fireRate;
-    }
+    public Vector3 playerHoldPosition;
+    public Vector3 playerHoldRotation;
 
-    public bool CheckFire() {
-        return (Time.time > nextFireTime);
-    }
+
 
 }
