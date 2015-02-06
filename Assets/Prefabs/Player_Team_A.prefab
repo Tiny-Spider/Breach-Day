@@ -931,7 +931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98f7cc9ba59905a4bb24ec39b1789f38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemID: 0
+  itemID: 10
   name: FN Fal
   InventoryType: 1
   nextFireTime: 0

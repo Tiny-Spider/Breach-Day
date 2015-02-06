@@ -3,8 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerHUD : MonoBehaviour {
-    public Text pingText;
-    public Text clipAmountText;
+    public Text ping;
+    public Text clipAmount;
     public Text ammoAmount;
 
 	void Start() {
@@ -19,7 +19,7 @@ public class PlayerHUD : MonoBehaviour {
     void OnUpdate(NetworkPlayer player, PlayerInfo playerInfo, string setting) {
         if (player.Equals(Network.player)) {
             if (setting.Equals(PlayerInfo.PING)) {
-                pingText.text = "Ping: " + playerInfo.ping + "ms";
+                ping.text = "Ping: " + playerInfo.ping + "ms";
             }
         }
     }

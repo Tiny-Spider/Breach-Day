@@ -26,8 +26,7 @@ public class Player : MonoBehaviour {
 
     private PlayerNetwork playerNetwork;
     private Dictionary<AmmoType, int> ammo = new Dictionary<AmmoType, int>();
-    Dictionary<SlotType, InventoryItem> inventoryItemSlotType = new Dictionary<SlotType, InventoryItem>();
-
+    private Dictionary<SlotType, InventoryItem> inventoryItemSlotType = new Dictionary<SlotType, InventoryItem>();
 
     private bool reloading;
 
@@ -188,19 +187,11 @@ public class Player : MonoBehaviour {
    }
 
     void UpdateHUD() {
-        playerHUD.clipAmountText.text = primary.currentClip.ToString();
+        playerHUD.clipAmount.text = primary.currentClip.ToString();
         playerHUD.ammoAmount.text = primary.currentAmmo.ToString();
     }
 
-    void UpdateHUD(Weapon weapon) {
-
-    }
-
-    void UpdateHUD(Throwable throwable) {
-
-    }
-
-    void UpdateHUD(Equipment equipment){
+    void UpdateHUD(InventoryItem item) {
 
     }
 
