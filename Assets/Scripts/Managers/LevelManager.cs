@@ -5,14 +5,28 @@ using System.Collections.Generic;
 public class LevelManager : MonoBehaviour {
     public static LevelManager instance { private set; get; }
 
-    public Level[] levels;
+    public LevelData[] levels { private set; get; }
 
     void Awake() {
         instance = this;
+
+        LoadLevels();
     }
 
-    public Level GetByName(string name) {
-        foreach (Level level in levels) {
+    private void LoadLevels() {
+        levels = Resources.LoadAll<LevelData>("Levels");
+
+        if (levels.Length == 0) {
+            Debug.LogError("No levels loaded! Add a \"LevelData\" in a \"Resources/Levels/\" folder!");
+        }
+    }
+
+    public LevelData GetDefault() {
+        return levels[0];
+    }
+
+    public LevelData GetByName(string name) {
+        foreach (LevelData level in levels) {
             if (level.levelName.EqualsIgnoreCase(name)) {
                 return level;
             }

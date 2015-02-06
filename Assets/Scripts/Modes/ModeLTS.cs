@@ -1,15 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ModeLTS : MonoBehaviour {
+public class ModeLTS : Mode {
+    private const string rounds = "rounds";
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private int _rounds;
 }

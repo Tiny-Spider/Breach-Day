@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour {
-    public static MenuManager instance;
-
     public GameObject mainPanel;
     public GameObject enterNamePanel;
     public GameObject preventInputPanel;
@@ -35,11 +33,6 @@ public class MenuManager : MonoBehaviour {
 
     private List<GameObject> panels = new List<GameObject>();
     private const string retryError = "retry";
-
-    void Awake()
-    {
-        instance = this;
-    }
 
     void Start()
     {
@@ -118,9 +111,9 @@ public class MenuManager : MonoBehaviour {
         //Check for the username to initialize it into the menu scene. Also sets the name to the GameManager.
         if (PlayerPrefs.HasKey(nameSaveTag))
         {
-            GameManager.instance.name = PlayerPrefs.GetString(nameSaveTag);
-            nameText.text = GameManager.instance.name;
-            print(GameManager.instance.name);
+            GameManager.instance.playerName = PlayerPrefs.GetString(nameSaveTag);
+            nameText.text = GameManager.instance.playerName;
+            print(GameManager.instance.playerName);
         }
         else
         {
@@ -133,7 +126,7 @@ public class MenuManager : MonoBehaviour {
         if (temp.text.Length >= 3)
         {
             PlayerPrefs.SetString(nameSaveTag,temp.text);
-            GameManager.instance.name = temp.text;
+            GameManager.instance.playerName = temp.text;
             nameText.text = temp.text;
             temp.text = "";
             ClosePopupPanel(enterNamePanel);
@@ -204,7 +197,7 @@ public class MenuManager : MonoBehaviour {
             ServerConnectionFeedback(createServerFeedback, "Creating..", Color.black);
             NetworkConnectionError networkError = Network.InitializeServer(tempMaxPlayers, tempPort, serverUseNAT.isOn);
             Network.incomingPassword = serverPassword.text;
-            MasterServer.RegisterHost(GameManager.instance.uniqueGameType, serverName.text, serverDescription.text);
+            MasterServer.RegisterHost(NetworkManager.uniqueGameType, serverName.text, serverDescription.text);
 
             string error = GetNetworkError(networkError);
             if (error.Equals(retryError))

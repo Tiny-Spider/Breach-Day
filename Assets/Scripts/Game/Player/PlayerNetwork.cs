@@ -41,7 +41,7 @@ public class PlayerNetwork : MonoBehaviour {
     [RPC]
     void SetPlayer(NetworkPlayer player, NetworkMessageInfo info) {
         owner = player;
-        transform.parent = FindObjectOfType<World>().playerHolder;
+        transform.parent = FindObjectOfType<Level>().playerHolder;
 
         string name = NetworkManager.instance.connectedPlayers[player].name;
         transform.name = name;

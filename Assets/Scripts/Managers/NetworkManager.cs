@@ -6,6 +6,11 @@ using System.Collections.Generic;
 public class NetworkManager : MonoBehaviour {
     public static NetworkManager instance { private set; get; }
 
+    public const string uniqueGameType = "breach_day";
+    public float pingUpdateSpeed = 0.5F;
+    public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
+
+    #region Events
     public delegate void OnServerNotification(string message);
     public event OnServerNotification OnNote = delegate { };
 
@@ -17,10 +22,7 @@ public class NetworkManager : MonoBehaviour {
 
     public delegate void OnPlayerUpdate(NetworkPlayer player, PlayerInfo playerInfo, string setting);
     public event OnPlayerUpdate OnUpdate = delegate { };
-
-    public Dictionary<NetworkPlayer, PlayerInfo> connectedPlayers = new Dictionary<NetworkPlayer, PlayerInfo>();
-
-    public float pingUpdateSpeed = 0.5F;
+    #endregion
 
     void Awake() {
         instance = this;
@@ -45,6 +47,9 @@ public class NetworkManager : MonoBehaviour {
     void OnServerInitialized() {
         Application.LoadLevel(GameManager.instance.lobbyScene);
         networkView.RPC("_AddPlayer", RPCMode.AllBuffered, Network.player);
+
+        GameManager.instance.UpdateMode();
+        GameManager.instance.UpdateLevel();
     }
 
     #endregion
@@ -94,8 +99,8 @@ public class NetworkManager : MonoBehaviour {
 
     // This has to be delayed, blame Unity
     IEnumerator SendInfo() {
-        yield return new WaitForEndOfFrame();
-        UpdateMyself(PlayerInfo.NAME, GameManager.instance.name);
+        yield return new WaitForFixedUpdate();
+        UpdateMyself(PlayerInfo.NAME, GameManager.instance.playerName);
     }
 
     [RPC]
