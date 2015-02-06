@@ -21,7 +21,7 @@ public static class ExtensionMethods {
     }
 
     public static bool EqualsIgnoreCase(this string text, string compareTo) {
-        return text.Equals(text, StringComparison.InvariantCultureIgnoreCase);
+        return text.Equals(compareTo, StringComparison.InvariantCultureIgnoreCase);
     }
 
     public static bool ContainsName(this Dictionary<NetworkPlayer, PlayerInfo>.ValueCollection list, string name) {
@@ -35,4 +35,21 @@ public static class ExtensionMethods {
 
         return names.Contains(name.ToLower());
     }
+
+    //public static T GetValue<T>(this List<Value> list, string valueName) {
+    //    Value? value = null;
+
+    //    foreach (Value levelValue in list) {
+    //        if (levelValue.name.EqualsIgnoreCase(valueName)) {
+    //            value = levelValue;
+    //            break;
+    //        }
+    //    }
+
+    //    if (value == null) {
+    //        return default(T);
+    //    }
+
+    //    return (T)(object)value.Value.value;
+    //}
 }

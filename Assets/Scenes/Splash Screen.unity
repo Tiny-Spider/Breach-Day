@@ -129,11 +129,12 @@ GameObject:
   - 114: {fileID: 100285502}
   - 114: {fileID: 100285500}
   - 114: {fileID: 100285504}
-  - 114: {fileID: 100285503}
   - 148: {fileID: 100285505}
+  - 114: {fileID: 100285503}
   - 114: {fileID: 100285506}
   - 114: {fileID: 100285507}
   - 114: {fileID: 100285509}
+  - 114: {fileID: 100285510}
   - 114: {fileID: 100285508}
   m_Layer: 0
   m_Name: GameManager
@@ -183,13 +184,9 @@ MonoBehaviour:
   splashScene: Splash Screen
   menuScene: Menu
   lobbyScene: Lobby
-  name: Player
-  uniqueGameType: breach_day
-  gamemode: 
-  levelName: Map
-  levelTime: 0
-  levelDoors: 0
-  levelWalls: 0
+  modeData: {fileID: 0}
+  levelData: {fileID: 0}
+  playerName: Player
 --- !u!114 &100285503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,6 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6efaa6177661c77498a6d82b4c472d2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pingUpdateSpeed: .5
 --- !u!148 &100285505
 NetworkView:
   m_ObjectHideFlags: 0
@@ -238,8 +236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60e5b887a2403cf43a13f3cac8d11afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levels:
-  - {fileID: 11400000, guid: 01e2e444d3c3dac4e95aafbc86ed961a, type: 2}
 --- !u!114 &100285507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,6 +280,17 @@ MonoBehaviour:
   maxSize: 20
   numOfCircleToShow: 1
   Initialized: 0
+--- !u!114 &100285510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 100285499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c0f1ac211c2c184ca7bb251d2700ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &673068061
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,10 +321,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: Menu
   title: {fileID: 1764550805}
-  titleTime: 2
+  titleTime: .100000001
   subtitle: {fileID: 1207332272}
-  subtitleTime: 1
-  splashTime: 1
+  subtitleTime: 0
+  splashTime: 0
 --- !u!4 &673068063
 Transform:
   m_ObjectHideFlags: 0

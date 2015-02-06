@@ -1,18 +1,51 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class Lobby : MonoBehaviour {
     public TeamDisplayer teamDisplayer;
 
+    public Image levelImage;
+    public Text levelName;
+    public Text levelTime;
+    public Text levelDoors;
+    public Text levelWalls;
+
+    public ValueEntry valueEntry;
+    public Text modeText;
+    public VerticalLayoutGroup modeHolder;
+
 	void Start () {
         NetworkManager.instance.OnJoin += PlayerJoin;
+        GameManager.instance.OnLevelUpdate += OnLevelUpdate;
+
         PlayerJoin(Network.player);
-        //NetworkManager.instance.UpdateMyself(PlayerInfo.TEAM, "1");
+
+        GameManager.instance.UpdateLevel();
+        GameManager.instance.UpdateMode();
 	}
 
     void OnDestroy() {
-        NetworkManager.instance.OnJoin -= PlayerJoin;
+        NetworkManager networkManager = NetworkManager.instance;
+        GameManager gameManager = GameManager.instance;
+
+        if (networkManager && gameManager) {
+            networkManager.OnJoin -= PlayerJoin;
+            gameManager.OnLevelUpdate -= OnLevelUpdate;
+        }
+    }
+
+    public void OnLevelUpdate(LevelData levelData, LevelSettings levelSettings) {
+        levelImage.sprite = levelData.levelImage;
+        levelName.text = levelData.levelName;
+        levelTime.text = levelSettings.time + "";
+        levelDoors.text = levelSettings.doors + "/" + levelData.maxDoorAmount;
+        levelWalls.text = levelSettings.walls + "/" + levelData.maxWallAmount;
+    }
+
+    public void OnModeUpdate(ModeData modeData) {
+        modeText.text = modeData.modeName;
     }
 
     void PlayerJoin(NetworkPlayer networkPlayer) {
@@ -39,18 +72,4 @@ public class Lobby : MonoBehaviour {
         // Start the game trough NetworkManager, so everyone get's the update
         GameManager.instance.StartGame();
     }
-
-    public void LoadMainMenu() {
-        Application.LoadLevel(1);
-    }
-
-    public void OpenPopupPanel(GameObject panel) {
-        panel.SetActive(true);
-    }
-
-    public void ClosePopupPanel(GameObject panel) {
-        panel.SetActive(false);
-    }
-
-    
 }

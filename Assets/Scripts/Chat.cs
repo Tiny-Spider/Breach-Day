@@ -12,7 +12,7 @@ public class Chat : MonoBehaviour {
     private string chat = "";
 
     public void Send() {
-        networkView.RPC("Message", RPCMode.All, GameManager.instance.name + ": " + chatField.text);
+        networkView.RPC("Message", RPCMode.All, GameManager.instance.playerName + ": " + chatField.text);
         chatField.text = "";
     }
 

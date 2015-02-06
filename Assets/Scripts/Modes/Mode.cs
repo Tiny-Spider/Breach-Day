@@ -3,13 +3,4 @@ using System.Collections;
 
 public abstract class Mode : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
