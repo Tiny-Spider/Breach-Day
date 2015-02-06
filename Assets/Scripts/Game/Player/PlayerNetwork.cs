@@ -58,7 +58,7 @@ public class PlayerNetwork : MonoBehaviour {
         transform.name = name;
 
         if (owner == null || owner != Network.player) {
-            Debug.Log("[" + name + " (" + player.ToString() + ")] Disabling Control!");
+            // Debug.Log("[" + name + " (" + player.ToString() + ")] Disabling Control!");
 
             foreach(Component component in clientComponents) {
                ((Behaviour) component).enabled = false;
@@ -69,7 +69,7 @@ public class PlayerNetwork : MonoBehaviour {
             }
         }
         else {
-            Debug.Log("[" + name + " (" + player.ToString() + ")] Enabling Control!");
+           // Debug.Log("[" + name + " (" + player.ToString() + ")] Enabling Control!");
         }
     }
 

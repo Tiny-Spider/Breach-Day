@@ -38,13 +38,13 @@ public class TeamDisplayer : MonoBehaviour {
 
             switch (playerInfo.team) {
                 case 0:
-                    playerEntry.transform.parent = teamFFA.transform;
+                    playerEntry.transform.SetParent(teamFFA.transform);
                     break;
                 case 1:
-                    playerEntry.transform.parent = teamA.transform;
+                    playerEntry.transform.SetParent(teamA.transform);
                     break;
                 case 2:
-                    playerEntry.transform.parent = teamB.transform;
+                    playerEntry.transform.SetParent(teamB.transform);
                     break;
                 default:
                     // Spectator
